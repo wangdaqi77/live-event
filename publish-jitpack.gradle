@@ -1,0 +1,36 @@
+group = 'com.github.wangdaqi77'
+version = "1.0.0"
+afterEvaluate {
+    if (plugins.hasPlugin('com.android.library')) {
+        apply plugin: 'maven-publish'
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    from components.release
+                    groupId = 'com.github.wangdaqi77'
+                    artifactId = "${project.name}"
+                    version = project.version
+                }
+            }
+        }
+    }else {
+        apply plugin: 'java'
+        apply plugin: 'maven'
+
+        task sourcesJar(type: Jar, dependsOn: classes) {
+            archiveClassifier.set(project.provider { 'sources' })
+            from sourceSets.main.allSource
+        }
+
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            archiveClassifier.set(project.provider { 'javadoc' })
+            from javadoc.destinationDir
+        }
+
+        artifacts {
+            archives sourcesJar
+            archives javadocJar
+        }
+    }
+
+}

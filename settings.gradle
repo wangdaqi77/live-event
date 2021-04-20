@@ -1,0 +1,4 @@
+rootProject.name = "live-event"
+include ':link_source'
+include ':demo'
+include ':core'

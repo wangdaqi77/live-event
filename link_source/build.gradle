@@ -1,0 +1,15 @@
+apply plugin: 'java-library'
+apply from: "../publish-jitpack.gradle"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+afterEvaluate {
+    // publish all for jitpack
+    tasks.findByName("install").dependsOn(":core:publishReleasePublicationToMavenLocal")
+}
