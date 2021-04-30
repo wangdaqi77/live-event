@@ -1,4 +1,4 @@
-package androidx.lifecycle.wrapper.internal
+package androidx.lifecycle.internal
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer

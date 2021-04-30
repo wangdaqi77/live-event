@@ -1,22 +1,22 @@
-package com.data.demo
+package com.data.demo.mutable
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
-import androidx.lifecycle.wrapper.LiveEvent
-import androidx.lifecycle.wrapper.MutableLiveEvent
-import kotlinx.android.synthetic.main.activity_full.*
+import androidx.lifecycle.mutable.MixedBackgroundLiveEvent
+import com.data.demo.R
+import kotlinx.android.synthetic.main.activity_mixed_background_live_event.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class LiveEventDemoActivity : AppCompatActivity() {
-    private var liveEvent: MutableLiveEvent<String> = MutableLiveEvent()
+class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
+    private var backgroundLiveEvent: MixedBackgroundLiveEvent<String> = MixedBackgroundLiveEvent()
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()
@@ -26,7 +26,7 @@ class LiveEventDemoActivity : AppCompatActivity() {
 
     private val backgroundRunnable = Runnable {
         for (i in 100000..500000){
-            // if (!backgroundOpen) return@Runnable
+             if (!backgroundOpen) return@Runnable
             postValue("[后台 $i]")
             try {
                 Thread.sleep(5_000)
@@ -40,32 +40,35 @@ class LiveEventDemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_full)
+        setContentView(R.layout.activity_mixed_background_live_event)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         lifecycle.addObserver(LifecycleEventObserver{ _,event->
             log("onStateChanged", event.name)
-
         })
 
 //        val a = Observer<String> { log("onChanged", it) }
-//        fullLiveData.observeNoStickyNoLoss(this, a)
-//        fullLiveData.observeForeverNoStickyNoLoss(a)
-//        fullLiveData.observeForeverNoLoss( a)
-//        fullLiveData.observeNoSticky(this, a)
+//        backgroundLiveEvent.observeNoStickyNoLoss(this, a)
+//        backgroundLiveEvent.observeForeverNoStickyNoLoss(a)
+//        backgroundLiveEvent.observeForeverNoLoss( a)
+//        backgroundLiveEvent.observeNoSticky(this, a)
 
-
-        setValue("init value")
+        setValue("init event")
 
         observeForMethod("observe")
         observeForMethod("observeNoSticky")
         observeForMethod("observeNoLoss")
 
+
         initListener()
     }
 
     private fun initListener() {
+
+        fullscreen_content.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            nsv.smoothScrollTo(0,bottom)
+        })
 
         buttonClean.setOnClickListener {
             fullscreen_content.text = null
@@ -73,10 +76,10 @@ class LiveEventDemoActivity : AppCompatActivity() {
 
         backgOpen.setOnClickListener {
             if (backgroundOpen) {
-                log("fail 开启后台post(间隔5s)")
+                log("fail [开启]间隔5s postValue")
                 return@setOnClickListener
             }
-            log("开启后台post(间隔5s)")
+            log("[开启]间隔5s postValue")
             backgroundOpen = true
             b1 = Executors.newSingleThreadExecutor()
             b1?.execute(backgroundRunnable)
@@ -84,32 +87,31 @@ class LiveEventDemoActivity : AppCompatActivity() {
 
         backgClose.setOnClickListener {
             if (!backgroundOpen) {
-                log("fail 关闭后台post")
+                log("fail [关闭]间隔5s postValue")
                 return@setOnClickListener
             }
-            log("关闭后台post")
+            log("[关闭]间隔5s postValue")
             backgroundOpen = false
             b1?.shutdownNow()
         }
 
         post1.setOnClickListener {
             t1.execute {
-                postValue("[post]")
+                postValue("[postValue]")
             }
         }
 
         postM.setOnClickListener {
-            for (i in 1..count) {
-                tm.execute {
-                    postValue("[post][$i]")
+            t1.execute {
+                for (i in 1..count) {
+                    postValue("[postValue][$i]")
                 }
             }
-
         }
         set1.setOnClickListener {
             t1.execute {
                 fullscreen_content.post {
-                    setValue("[set]")
+                    setValue("[setValue]")
                 }
 
             }
@@ -117,13 +119,8 @@ class LiveEventDemoActivity : AppCompatActivity() {
 
         setM.setOnClickListener {
             for (i in 1..count) {
-                tm.execute {
-                    fullscreen_content.post {
-                        setValue("[set][$i]")
-                    }
-                }
+                setValue("[setValue][$i]")
             }
-
         }
 
         observe.setOnClickListener {
@@ -166,11 +163,11 @@ class LiveEventDemoActivity : AppCompatActivity() {
     }
 
     private fun setValue(value:String) {
-        liveEvent.setValue(value)
+        backgroundLiveEvent.setValue(value)
     }
 
     private fun postValue(value:String) {
-        liveEvent.postValue(value)
+        backgroundLiveEvent.postValue(value)
     }
 
     private val observers = HashMap<String, Observer<String>>().apply {
@@ -189,20 +186,20 @@ class LiveEventDemoActivity : AppCompatActivity() {
         log("添加观察", name)
 
         when (name) {
-            "observe" -> { liveEvent.observe(this, observer) }
-            "observeForever" -> { liveEvent.observeForever(observer) }
-            "observeNoSticky" -> liveEvent.observeNoSticky(this, observer)
-            "observeForeverNoSticky" -> liveEvent.observeForeverNoSticky(observer)
-            "observeNoLoss" -> { liveEvent.observeNoLoss(this, observer) }
-            "observeForeverNoLoss" -> { liveEvent.observeForeverNoLoss(observer) }
-            "observeNoStickyNoLoss" -> liveEvent.observeNoStickyNoLoss(this, observer)
-            "observeForeverNoStickyNoLoss" -> liveEvent.observeForeverNoStickyNoLoss(observer)
+            "observe" -> { backgroundLiveEvent.observe(this, observer) }
+            "observeForever" -> { backgroundLiveEvent.observeForever(observer) }
+            "observeNoSticky" -> backgroundLiveEvent.observeNoSticky(this, observer)
+            "observeForeverNoSticky" -> backgroundLiveEvent.observeForeverNoSticky(observer)
+            "observeNoLoss" -> { backgroundLiveEvent.observeNoLoss(this, observer) }
+            "observeForeverNoLoss" -> { backgroundLiveEvent.observeForeverNoLoss(observer) }
+            "observeNoStickyNoLoss" -> backgroundLiveEvent.observeNoStickyNoLoss(this, observer)
+            "observeForeverNoStickyNoLoss" -> backgroundLiveEvent.observeForeverNoStickyNoLoss(observer)
         }
     }
 
     private fun removeObserveForMethod(name:String){
         log("移除观察", name)
-        liveEvent.removeObserver(observers[name]!!)
+        backgroundLiveEvent.removeObserver(observers[name]!!)
     }
 
 
@@ -215,35 +212,16 @@ class LiveEventDemoActivity : AppCompatActivity() {
         val timeText = dateFormat.format(currentTimeMillis)
 
         fullscreen_content.post {
-            val child = nsv.getChildAt(0)
-            val lp = child.getLayoutParams() as ViewGroup.MarginLayoutParams
-            val parentSpace: Int = nsv.getHeight() - nsv.getPaddingTop() - nsv.getPaddingBottom()
-            val scrollY: Int = nsv.getScrollY()
-            var childSize: Int = child.getHeight() + lp.topMargin + lp.bottomMargin
-            var maxY = Math.max(0, childSize - parentSpace)
-
-            var scrollBottom = false
-            if (scrollY == maxY) {
-                scrollBottom = true
-            }
-
             fullscreen_content.append(
                 "\n${timeText} tag: $tag, $value\n"
             )
-
-            if (scrollBottom) {
-                fullscreen_content.post {
-                    childSize = child.getHeight() + lp.topMargin + lp.bottomMargin
-                    maxY = Math.max(0, childSize - parentSpace)
-                    nsv.smoothScrollTo(0, maxY)
-                }
-            }
         }
 
 
     }
 
     override fun onDestroy() {
+        backgroundOpen = false
         super.onDestroy()
     }
 

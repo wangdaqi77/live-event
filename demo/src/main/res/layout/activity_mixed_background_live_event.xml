@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/post1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/postM"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/set1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="setValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/setM"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次setValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="\nobserve"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForever"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observeForever"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeNoSticky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observeNoSticky"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoSticky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observeForeverNoSticky"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observe1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForever1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeNoSticky1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoSticky1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observeNoLoss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="\nobserveNoLoss"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoLoss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="\nobserveForeverNoLoss"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeNoStickyNoLoss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="\nobserveNoStickyNoLoss"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoStickyNoLoss"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observeForeverNoStickyNoLoss"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observeNoLoss1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoLoss1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeNoStickyNoLoss1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/observeForeverNoStickyNoLoss1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="移除↑"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/buttonClean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="清空log"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+
+        <Button
+            android:id="@+id/backgOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="[开启]间隔5s postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/backgClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="20dp"
+
+            android:text="[关闭]间隔5s postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#36B"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/fullscreen_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="嘎嘎嘎" />
+
+        </FrameLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

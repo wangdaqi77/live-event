@@ -19,7 +19,4 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
--keep class androidx.arch.core.internal.SafeIterableMap { * get(*); }
--keep class androidx.lifecycle.LiveData { <fields>; }
--keep class androidx.lifecycle.LiveData$* { <fields>; }
+-keepclassmembers class androidx.lifecycle.LiveData { * mObservers; }

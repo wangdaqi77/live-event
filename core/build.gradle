@@ -28,12 +28,18 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    sourceSets{
+        main {
+            java.srcDirs += "src/ignore/java"
+            java.exclude("**/LiveData.java")
+        }
+    }
 }
 
 dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compileOnly "androidx.lifecycle:lifecycle-livedata-core:2.3.0"
-    compileOnly "androidx.lifecycle:lifecycle-common:2.3.0"
-    compileOnly 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1'
+    compileOnly "androidx.lifecycle:lifecycle-livedata-core:2.3.1"
+    compileOnly "androidx.lifecycle:lifecycle-common:2.3.1"
     compileOnly project(":link_source")
 }

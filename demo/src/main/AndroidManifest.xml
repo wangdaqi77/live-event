@@ -14,8 +14,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LiveEventDemoActivity"/>
-        <activity android:name=".LiveBackgroundEventDemoActivity"/>
+        <activity android:name=".mutable.LikeLiveDataDemoActivity"/>
+        <activity android:name=".mutable.NoLossDemoActivity"/>
+        <activity android:name=".mutable.NoStickyDemoActivity"/>
+        <activity android:name=".mutable.NoStickyNoLossDemoActivity"/>
+        <activity android:name=".mutable.MixedLiveEventDemoActivity"/>
+        <activity android:name=".mutable.MixedBackgroundLiveEventDemoActivity"/>
+        <activity android:name=".other.SpecifiedThreadToObserveDemoActivity"/>
     </application>
 
 </manifest>

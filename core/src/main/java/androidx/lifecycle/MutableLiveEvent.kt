@@ -1,16 +1,16 @@
-package androidx.lifecycle.wrapper
+package androidx.lifecycle
 
 /**
- * [LiveEvent] which publicly exposes [setValue] and [postValue] method.
+ * [MutableLiveEvent] which publicly exposes [setValue] and [postValue] method.
  *
- * @param <T> The type of data hold by this instance
+ * @param T The type of data hold by this instance
  */
-open class MutableLiveEvent<T> : LiveEvent<T> {
+open class MutableLiveEvent<T> : LiveEvent<T>{
 
     /**
-     * Creates a MutableLiveEvent initialized with the given `value`.
+     * Creates a MutableLiveEvent initialized with the given value.
      *
-     * @param value initial value
+     * @property value initial value
      */
     constructor(value: T) : super(value)
 
@@ -18,7 +18,6 @@ open class MutableLiveEvent<T> : LiveEvent<T> {
      * Creates a MutableLiveEvent with no value assigned to it.
      */
     constructor() : super()
-
 
     public override fun postValue(value: T) {
         super.postValue(value)

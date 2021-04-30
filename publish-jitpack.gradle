@@ -3,13 +3,26 @@ version = "1.0.0"
 afterEvaluate {
     if (plugins.hasPlugin('com.android.library')) {
         apply plugin: 'maven-publish'
+        def buildType = "release"
+        ext._jitpact_publish_task_name = ":${name}:publish${buildType.capitalize()}PublicationToMavenLocal"
         publishing {
             publications {
-                release(MavenPublication) {
-                    from components.release
+                "${buildType}"(MavenPublication) {
+                    from components."${buildType}"
                     groupId = 'com.github.wangdaqi77'
                     artifactId = "${project.name}"
                     version = project.version
+                }
+            }
+        }
+
+        afterEvaluate {
+            def skippedTasks = [
+                    "generate${buildType.capitalize()}BuildConfig",
+            ]
+            skippedTasks.forEach{ name ->
+                tasks.named(name) { task->
+                    task.enabled = false
                 }
             }
         }
@@ -30,6 +43,22 @@ afterEvaluate {
         artifacts {
             archives sourcesJar
             archives javadocJar
+        }
+
+        // the project will publish artifacts to jitpack,
+        // that artifact info can be like ${groupId}.${rootProjectName}:${projectName}:${version}
+        afterEvaluate { Project selfProject ->
+            // publish all for jitpack
+            rootProject.allprojects { Project subProject ->
+                if (subProject != selfProject && subProject.plugins.hasPlugin('maven-publish')) {
+                    if (subProject.ext._jitpact_publish_task_name != null) {
+                        selfProject.tasks.named("install") { task ->
+                            task.dependsOn(subProject.ext._jitpact_publish_task_name)
+                        }
+                    }
+                }
+            }
+
         }
     }
 

@@ -1,15 +1,37 @@
-apply plugin: 'java-library'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply from: "../publish-jitpack.gradle"
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
-
-afterEvaluate {
-    // publish all for jitpack
-    tasks.findByName("install").dependsOn(":core:publishReleasePublicationToMavenLocal")
+dependencies {
+    compileOnly "androidx.lifecycle:lifecycle-livedata-core:2.3.1"
+    compileOnly "androidx.lifecycle:lifecycle-common:2.3.1"
 }

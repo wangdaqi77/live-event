@@ -1,11 +1,11 @@
-package androidx.lifecycle.wrapper.internal
+package androidx.lifecycle.internal
 
 import androidx.arch.core.internal.SafeIterableMap
 import androidx.lifecycle.Observer
 
 internal inline fun<T> SafeIterableMap<Observer<in T>, *>.eachObserver(block:(Observer<in T>) -> Unit){
     @Suppress("INACCESSIBLE_TYPE")
-    val iterator = iteratorWithAdditions() as Iterator<Map.Entry<Observer<in T>, *>>
+    val iterator = iterator() as Iterator<Map.Entry<Observer<in T>, *>>
     while (iterator.hasNext()) {
         val observer = iterator.next().key
         block(observer)

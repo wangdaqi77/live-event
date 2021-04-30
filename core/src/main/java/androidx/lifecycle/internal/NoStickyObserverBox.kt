@@ -1,22 +1,26 @@
-package androidx.lifecycle.wrapper.internal
+package androidx.lifecycle.internal
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 
-internal class AlwaysActiveNoStickyObserverWrapper<T> constructor(
+internal class AlwaysActiveNoStickyObserverBox<T> constructor(
     observer: Observer<in T>,
-    override var ignored: Boolean
-) : NoStickyObserverWrapper<T>(observer), AlwaysActive
+    override var ignored: Boolean,
+    onChanged: (Observer<in T>, T) -> Unit
+) : NoStickyObserverBox<T>(observer, onChanged), AlwaysActive
 
 
-internal class LifecycleBoundNoStickyObserverWrapper<T> internal constructor(private val observers: Observers<T>, private val owner: LifecycleOwner, observer: Observer<in T>, override var ignored: Boolean)
-    : NoStickyObserverWrapper<T>(observer) , LifecycleEventObserver {
+internal class LifecycleBoundNoStickyObserverBox<T> constructor(
+    private val owner: LifecycleOwner, observer: Observer<in T>, override var ignored: Boolean,
+    onChanged: (Observer<in T>, T) -> Unit,
+    private val onOwnerDestroy: (Observer<in T>) -> Unit
+) : NoStickyObserverBox<T>(observer, onChanged), LifecycleEventObserver {
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
-            observers.removeObserver(observer)
+            onOwnerDestroy(observer)
             return
         }
     }
@@ -29,7 +33,10 @@ internal class LifecycleBoundNoStickyObserverWrapper<T> internal constructor(pri
     }
 }
 
-internal abstract class NoStickyObserverWrapper<T>(override val observer: Observer<in T>) :
+internal abstract class NoStickyObserverBox<T> constructor(
+    override val observer: Observer<in T>,
+    private val onChanged: (Observer<in T>, T) -> Unit
+) :
     Observer<T>, ObserverBox<T> {
     abstract var ignored: Boolean
     private fun shouldIgnored(): Boolean {
@@ -40,7 +47,7 @@ internal abstract class NoStickyObserverWrapper<T>(override val observer: Observ
 
     override fun onChanged(value: T) {
         if (shouldIgnored()) return
-        observer.onChanged(value)
+        onChanged(observer, value)
     }
 
     open override fun isAttachedTo(owner: LifecycleOwner): Boolean = false

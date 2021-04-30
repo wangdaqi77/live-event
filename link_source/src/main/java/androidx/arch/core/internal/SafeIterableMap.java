@@ -1,5 +1,23 @@
+/*
+ * Copyright 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package androidx.arch.core.internal;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -11,7 +29,9 @@ import java.util.WeakHashMap;
  *
  * @param <K> Key type
  * @param <V> Value type
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
 public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
 
     @SuppressWarnings("WeakerAccess") /* synthetic access */
@@ -42,7 +62,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
      * @return the previous value associated with the specified key,
      * or {@code null} if there was no mapping for the key
      */
-    public V putIfAbsent( K key,  V v) {
+    public V putIfAbsent(@NonNull K key, V v) {
         Entry<K, V> entry = get(key);
         if (entry != null) {
             return entry.mValue;
@@ -51,7 +71,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
         return null;
     }
 
-    protected Entry<K, V> put( K key,  V v) {
+    protected Entry<K, V> put(@NonNull K key, @NonNull V v) {
         Entry<K, V> newEntry = new Entry<>(key, v);
         mSize++;
         if (mEnd == null) {
@@ -74,7 +94,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
      * @return the previous value associated with the specified key,
      * or {@code null} if there was no mapping for the key
      */
-    public V remove( K key) {
+    public V remove(@NonNull K key) {
         Entry<K, V> toRemove = get(key);
         if (toRemove == null) {
             return null;
@@ -114,7 +134,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
      * @return an ascending iterator, which doesn't include new elements added during an
      * iteration.
      */
-
+    @NonNull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
         ListIterator<K, V> iterator = new AscendingIterator<>(mStart, mEnd);
@@ -223,7 +243,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
 
         @SuppressWarnings("ReferenceEquality")
         @Override
-        public void supportRemove( Entry<K, V> entry) {
+        public void supportRemove(@NonNull Entry<K, V> entry) {
             if (mExpectedEnd == entry && entry == mNext) {
                 mNext = null;
                 mExpectedEnd = null;
@@ -300,7 +320,7 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
 
         @SuppressWarnings("ReferenceEquality")
         @Override
-        public void supportRemove( Entry<K, V> entry) {
+        public void supportRemove(@NonNull Entry<K, V> entry) {
             if (entry == mCurrent) {
                 mCurrent = mCurrent.mPrevious;
                 mBeforeStart = mCurrent == null;
@@ -328,29 +348,29 @@ public class SafeIterableMap<K, V> implements Iterable<Map.Entry<K, V>> {
     }
 
     interface SupportRemove<K, V> {
-        void supportRemove( Entry<K, V> entry);
+        void supportRemove(@NonNull Entry<K, V> entry);
     }
 
     static class Entry<K, V> implements Map.Entry<K, V> {
-
+        @NonNull
         final K mKey;
-
+        @NonNull
         final V mValue;
         Entry<K, V> mNext;
         Entry<K, V> mPrevious;
 
-        Entry( K key,  V value) {
+        Entry(@NonNull K key, @NonNull V value) {
             mKey = key;
             this.mValue = value;
         }
 
-
+        @NonNull
         @Override
         public K getKey() {
             return mKey;
         }
 
-
+        @NonNull
         @Override
         public V getValue() {
             return mValue;

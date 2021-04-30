@@ -1,10 +1,9 @@
-package androidx.lifecycle.wrapper.internal
+package androidx.lifecycle.internal
 
 import androidx.arch.core.internal.SafeIterableMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.lang.reflect.Field
-import java.lang.reflect.Method
 
 internal object LiveDataReflect {
     const val START_VERSION = -1
