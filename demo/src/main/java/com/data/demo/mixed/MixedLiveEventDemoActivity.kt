@@ -1,4 +1,4 @@
-package com.data.demo.mutable
+package com.data.demo.mixed
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,16 +7,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
-import androidx.lifecycle.mutable.MixedBackgroundLiveEvent
+import androidx.lifecycle.mixed.MixedLiveEvent
 import com.data.demo.R
-import kotlinx.android.synthetic.main.activity_mixed_background_live_event.*
+import kotlinx.android.synthetic.main.activity_mixed_live_event.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
-    private var backgroundLiveEvent: MixedBackgroundLiveEvent<String> = MixedBackgroundLiveEvent()
+class MixedLiveEventDemoActivity : AppCompatActivity() {
+    private var liveEvent: MixedLiveEvent<String> =
+        MixedLiveEvent()
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()
@@ -26,7 +27,7 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
 
     private val backgroundRunnable = Runnable {
         for (i in 100000..500000){
-             if (!backgroundOpen) return@Runnable
+            if (!backgroundOpen) return@Runnable
             postValue("[后台 $i]")
             try {
                 Thread.sleep(5_000)
@@ -40,36 +41,35 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_mixed_background_live_event)
+        setContentView(R.layout.activity_mixed_live_event)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         lifecycle.addObserver(LifecycleEventObserver{ _,event->
             log("onStateChanged", event.name)
+
         })
 
 //        val a = Observer<String> { log("onChanged", it) }
-//        backgroundLiveEvent.observeNoStickyNoLoss(this, a)
-//        backgroundLiveEvent.observeForeverNoStickyNoLoss(a)
-//        backgroundLiveEvent.observeForeverNoLoss( a)
-//        backgroundLiveEvent.observeNoSticky(this, a)
+//        liveEvent.observeNoStickyNoLoss(this, a)
+//        liveEvent.observeForeverNoStickyNoLoss(a)
+//        liveEvent.observeForeverNoLoss( a)
+//        liveEvent.observeNoSticky(this, a)
 
+
+        log("setValue", "init event")
         setValue("init event")
 
         observeForMethod("observe")
         observeForMethod("observeNoSticky")
         observeForMethod("observeNoLoss")
 
-
         initListener()
     }
 
     private fun initListener() {
-
         fullscreen_content.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             nsv.smoothScrollTo(0,bottom)
         })
-
         buttonClean.setOnClickListener {
             fullscreen_content.text = null
         }
@@ -107,6 +107,7 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
                     postValue("[postValue][$i]")
                 }
             }
+
         }
         set1.setOnClickListener {
             t1.execute {
@@ -163,11 +164,11 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
     }
 
     private fun setValue(value:String) {
-        backgroundLiveEvent.setValue(value)
+        liveEvent.setValue(value)
     }
 
     private fun postValue(value:String) {
-        backgroundLiveEvent.postValue(value)
+        liveEvent.postValue(value)
     }
 
     private val observers = HashMap<String, Observer<String>>().apply {
@@ -186,26 +187,26 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
         log("添加观察", name)
 
         when (name) {
-            "observe" -> { backgroundLiveEvent.observe(this, observer) }
-            "observeForever" -> { backgroundLiveEvent.observeForever(observer) }
-            "observeNoSticky" -> backgroundLiveEvent.observeNoSticky(this, observer)
-            "observeForeverNoSticky" -> backgroundLiveEvent.observeForeverNoSticky(observer)
-            "observeNoLoss" -> { backgroundLiveEvent.observeNoLoss(this, observer) }
-            "observeForeverNoLoss" -> { backgroundLiveEvent.observeForeverNoLoss(observer) }
-            "observeNoStickyNoLoss" -> backgroundLiveEvent.observeNoStickyNoLoss(this, observer)
-            "observeForeverNoStickyNoLoss" -> backgroundLiveEvent.observeForeverNoStickyNoLoss(observer)
+            "observe" -> { liveEvent.observe(this, observer) }
+            "observeForever" -> { liveEvent.observeForever(observer) }
+            "observeNoSticky" -> liveEvent.observeNoSticky(this, observer)
+            "observeForeverNoSticky" -> liveEvent.observeForeverNoSticky(observer)
+            "observeNoLoss" -> { liveEvent.observeNoLoss(this, observer) }
+            "observeForeverNoLoss" -> { liveEvent.observeForeverNoLoss(observer) }
+            "observeNoStickyNoLoss" -> liveEvent.observeNoStickyNoLoss(this, observer)
+            "observeForeverNoStickyNoLoss" -> liveEvent.observeForeverNoStickyNoLoss(observer)
         }
     }
 
     private fun removeObserveForMethod(name:String){
         log("移除观察", name)
-        backgroundLiveEvent.removeObserver(observers[name]!!)
+        liveEvent.removeObserver(observers[name]!!)
     }
 
 
     private fun log(tag:String, value:String? = null){
 
-        Log.e("DEMO", "tag: $tag,      $value")
+        Log.e("DEMO", "tag: $tag→      $value")
 
         val dateFormat = SimpleDateFormat("HH:mm:ss.SSS")
         val currentTimeMillis = System.currentTimeMillis()
@@ -213,7 +214,7 @@ class MixedBackgroundLiveEventDemoActivity : AppCompatActivity() {
 
         fullscreen_content.post {
             fullscreen_content.append(
-                "\n${timeText} tag: $tag, $value\n"
+                "\n${timeText} tag: $tag→ $value\n"
             )
         }
 

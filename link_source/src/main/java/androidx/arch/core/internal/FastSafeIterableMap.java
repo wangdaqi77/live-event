@@ -29,9 +29,7 @@ import java.util.Map;
  *
  * @param <K> Key type
  * @param <V> Value type
- * @hide
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
 public class FastSafeIterableMap<K, V> extends SafeIterableMap<K, V> {
 
     private HashMap<K, Entry<K, V>> mHashMap = new HashMap<>();

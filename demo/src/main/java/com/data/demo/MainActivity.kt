@@ -5,12 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.data.demo.mutable.LikeLiveDataDemoActivity
-import com.data.demo.mutable.MixedBackgroundLiveEventDemoActivity
-import com.data.demo.mutable.MixedLiveEventDemoActivity
-import com.data.demo.mutable.NoLossDemoActivity
-import com.data.demo.mutable.NoStickyDemoActivity
-import com.data.demo.mutable.NoStickyNoLossDemoActivity
+import com.data.demo.mixed.MixedBackgroundLiveEventDemoActivity
+import com.data.demo.mixed.MixedLiveEventDemoActivity
 import com.data.demo.other.SpecifiedThreadToObserveDemoActivity
 
 

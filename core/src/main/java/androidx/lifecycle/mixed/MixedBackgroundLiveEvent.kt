@@ -1,35 +1,27 @@
-package androidx.lifecycle.mutable
+package androidx.lifecycle.mixed
 
+import androidx.lifecycle.BackgroundLiveEvent
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveEvent
 import androidx.lifecycle.Observer
 
 /**
- * [MixedLiveEvent] publicly exposes all observe method.
+ * [MixedBackgroundLiveEvent] publicly exposes all observe method.
  *
- * @param T The type of data hold by this instance
+ * @param T The type of data hold by this instance.
  */
-open class MixedLiveEvent<T> : MutableLiveEvent<T> {
+open class MixedBackgroundLiveEvent<T> : BackgroundLiveEvent<T> {
 
     /**
-     * Creates a MixedLiveEvent initialized with the given value.
+     * Creates a MixedBackgroundLiveEvent initialized with the given value.
      *
-     * @property value initial value
+     * @property value initial value.
      */
     constructor(value: T) : super(value)
 
     /**
-     * Creates a MixedLiveEvent with no value assigned to it.
+     * Creates a MixedBackgroundLiveEvent with no value assigned to it.
      */
     constructor() : super()
-
-    public override fun postValue(value: T) {
-        super.postValue(value)
-    }
-
-    public override fun setValue(value: T) {
-        super.setValue(value)
-    }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         super.observe(owner, observer)

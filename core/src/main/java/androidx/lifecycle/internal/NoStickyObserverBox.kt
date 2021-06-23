@@ -13,22 +13,27 @@ internal class AlwaysActiveNoStickyObserverBox<T> constructor(
 
 
 internal class LifecycleBoundNoStickyObserverBox<T> constructor(
-    private val owner: LifecycleOwner, observer: Observer<in T>, override var ignored: Boolean,
+    private val mOwner: LifecycleOwner, observer: Observer<in T>, override var ignored: Boolean,
     onChanged: (Observer<in T>, T) -> Unit,
-    private val onOwnerDestroy: (Observer<in T>) -> Unit
+    private val onOwnerDestroy: (Observer<in T>) -> Unit,
+    private val isBackground: Boolean = false
 ) : NoStickyObserverBox<T>(observer, onChanged), LifecycleEventObserver {
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+        if (mOwner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             onOwnerDestroy(observer)
             return
         }
     }
 
-    override fun isAttachedTo(owner: LifecycleOwner): Boolean  = this.owner === owner
+    override fun isAttachedTo(owner: LifecycleOwner): Boolean  = this.mOwner === owner
 
     override fun detachObserver() {
-        owner.lifecycle.removeObserver(this)
+        if (isBackground) {
+            InternalReflect.removeObserverSafe(mOwner, this)
+        }else {
+            mOwner.lifecycle.removeObserver(this)
+        }
         super.detachObserver()
     }
 }

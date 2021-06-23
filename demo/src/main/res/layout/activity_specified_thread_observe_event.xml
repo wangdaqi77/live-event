@@ -9,143 +9,145 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
-
-        <Button
-            android:id="@+id/post1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="postValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/postM"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="5次postValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/set1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="setValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/setM"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="5次setValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <Button
-                android:id="@+id/addGlobalDispatcher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-
-                android:layout_weight="1"
-                android:gravity="center"
-                android:minHeight="15dp"
-
-                android:text="全局设置自定义线程"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/removeGlobalDispatcher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-
-                android:layout_weight="1"
-                android:gravity="center"
-                android:minHeight="15dp"
-
-                android:text="←移除全局设置"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
             tools:ignore="UselessParent">
 
             <Button
                 android:id="@+id/observe"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:minHeight="15dp"
 
-                android:text="observe"
+                android:text="observe - EventDispatcher.DEFAULT\n默认后台线程接收，不建议做耗时操作"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/observe1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
 
 
-                android:layout_weight="1"
+
                 android:gravity="center"
                 android:minHeight="15dp"
 
                 android:text="←移除"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observea"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+
+                android:layout_weight="2"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observe - EventDispatcher.MAIN\n主线程接收，不建议做耗时操作"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/observea1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+
+
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="←移除"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observeb"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+
+                android:layout_weight="2"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observe - EventDispatcher.BACKGROUND\n后台线程接收，不建议做耗时操作"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/observeb1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+
+
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="←移除"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observec"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+
+                android:layout_weight="2"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observe - EventDispatcher.ASYNC\n后台线程接收，可做耗时操作"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/observec1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+
+
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="←移除"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -156,36 +158,99 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/observec"
+                android:id="@+id/observed"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
 
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:minHeight="15dp"
 
-                android:text="observe使用BackgroundObserver\n设置指定线程接收"
+                android:text="observe - customEventDispatcher\n单独指定自定义线程接收"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
 
             <Button
-                android:id="@+id/observec1"
-                android:layout_width="0dp"
+                android:id="@+id/observed1"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
 
-                android:layout_weight="1"
+
                 android:gravity="center"
                 android:minHeight="15dp"
 
                 android:text="←移除"
                 android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/post1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="postValue"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/postM"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次postValue"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/set1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="setValue"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/setM"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次setValue"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -205,7 +270,7 @@
 
             android:text="清空log"
             android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
 
         <Button
@@ -220,7 +285,7 @@
 
             android:text="[开启]间隔5s postValue"
             android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/backgClose"
@@ -234,7 +299,7 @@
 
             android:text="[关闭]间隔5s postValue"
             android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
 

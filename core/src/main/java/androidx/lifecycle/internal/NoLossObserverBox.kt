@@ -19,7 +19,8 @@ internal class AlwaysActiveToLifecycleBoundNoLossObserverBox<T> constructor(
     private val mOwner: LifecycleOwner,
     observer: Observer<in T>,
     onChanged: (Observer<in T>, T) -> Unit,
-    private val onOwnerDestroy: (Observer<in T>) -> Unit
+    private val onOwnerDestroy: (Observer<in T>) -> Unit,
+    private val isBackground: Boolean = false
 ) : NoLossObserverBox<T>(observer, onChanged), LifecycleEventObserver {
 
     override fun shouldBeActive(): Boolean = mOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
@@ -42,7 +43,11 @@ internal class AlwaysActiveToLifecycleBoundNoLossObserverBox<T> constructor(
     override fun isAttachedTo(owner: LifecycleOwner): Boolean = this.mOwner === owner
 
     override fun detachObserver() {
-        mOwner.lifecycle.removeObserver(this)
+        if (isBackground) {
+            InternalReflect.removeObserverSafe(mOwner, this)
+        }else {
+            mOwner.lifecycle.removeObserver(this)
+        }
         super.detachObserver()
     }
 

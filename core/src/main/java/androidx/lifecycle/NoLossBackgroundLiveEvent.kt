@@ -1,21 +1,17 @@
-package androidx.lifecycle.mutable
-
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableBackgroundLiveEvent
-import androidx.lifecycle.Observer
+package androidx.lifecycle
 
 /**
  * [NoLossBackgroundLiveEvent] which override [observe] and [observeForever] method,
  * they actually map [observeNoLoss] and [observeForeverNoLoss] method.
  *
- * @param T The type of data hold by this instance
+ * @param T The type of data hold by this instance.
  */
-open class NoLossBackgroundLiveEvent<T> : MutableBackgroundLiveEvent<T> {
+open class NoLossBackgroundLiveEvent<T> : BackgroundLiveEvent<T> {
 
     /**
      * Creates a NoLossBackgroundLiveEvent initialized with the given value.
      *
-     * @property value initial value
+     * @property value initial value.
      */
     constructor(value: T) : super(value)
 

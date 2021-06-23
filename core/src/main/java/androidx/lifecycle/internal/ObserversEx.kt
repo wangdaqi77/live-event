@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 
 internal inline fun<T> SafeIterableMap<Observer<in T>, *>.eachObserver(block:(Observer<in T>) -> Unit){
     @Suppress("INACCESSIBLE_TYPE")
-    val iterator = iterator() as Iterator<Map.Entry<Observer<in T>, *>>
+    val iterator = iteratorWithAdditions() as Iterator<Map.Entry<Observer<in T>, *>>
     while (iterator.hasNext()) {
         val observer = iterator.next().key
         block(observer)
@@ -30,7 +30,7 @@ internal inline fun<T> SafeIterableMap<Observer<in T>, *>.findObserverBox(predic
 }
 
 /**
- * @return  final observer of observe
+ * @return final observer of observe.
  */
 internal fun<T> SafeIterableMap<Observer<in T>, *>.detachObserverBoxWith(observer: Observer<in T>, onDetach:(ObserverBox<in T>)->Unit): Observer<in T> {
     var currentObserver: Observer<in T> = observer

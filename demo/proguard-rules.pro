@@ -19,4 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keepclassmembers class androidx.lifecycle.LiveData { * mObservers; }
+-dontwarn androidx.lifecycle.LiveData
+-keep class androidx.lifecycle.LiveData { *; }
+-dontwarn androidx.lifecycle.LifecycleRegistry
+-keep class androidx.lifecycle.LifecycleRegistry { *; }

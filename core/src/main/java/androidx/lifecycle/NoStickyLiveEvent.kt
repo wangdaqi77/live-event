@@ -1,21 +1,17 @@
-package androidx.lifecycle.mutable
-
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveEvent
-import androidx.lifecycle.Observer
+package androidx.lifecycle
 
 /**
  * [NoStickyLiveEvent] which override [observe] and [observeForever] method,
  * they actually map [observeNoSticky] and [observeForeverNoSticky] method.
  *
- * @param T The type of data hold by this instance
+ * @param T The type of data hold by this instance.
  */
-open class NoStickyLiveEvent<T> : MutableLiveEvent<T> {
+open class NoStickyLiveEvent<T> : LiveEvent<T> {
 
     /**
      * Creates a NoStickyLiveEvent initialized with the given value.
      *
-     * @property value initial value
+     * @property value initial value.
      */
     constructor(value: T) : super(value)
 

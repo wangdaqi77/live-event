@@ -9,70 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
-
-        <Button
-            android:id="@+id/post1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="postValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/postM"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="5次postValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/set1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="setValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/setM"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minHeight="15dp"
-
-            android:text="5次setValue"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical">
 
 
@@ -86,7 +22,7 @@
             <Button
                 android:id="@+id/observe"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -100,7 +36,7 @@
             <Button
                 android:id="@+id/observeForever"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -114,7 +50,7 @@
             <Button
                 android:id="@+id/observeNoSticky"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -128,7 +64,7 @@
             <Button
                 android:id="@+id/observeForeverNoSticky"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -150,7 +86,7 @@
             <Button
                 android:id="@+id/observe1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -164,7 +100,7 @@
             <Button
                 android:id="@+id/observeForever1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -178,7 +114,7 @@
             <Button
                 android:id="@+id/observeNoSticky1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -192,7 +128,7 @@
             <Button
                 android:id="@+id/observeForeverNoSticky1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -215,7 +151,7 @@
             <Button
                 android:id="@+id/observeNoLoss"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
@@ -230,7 +166,7 @@
             <Button
                 android:id="@+id/observeForeverNoLoss"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
@@ -245,7 +181,7 @@
             <Button
                 android:id="@+id/observeNoStickyNoLoss"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
@@ -260,7 +196,7 @@
             <Button
                 android:id="@+id/observeForeverNoStickyNoLoss"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
@@ -284,7 +220,7 @@
             <Button
                 android:id="@+id/observeNoLoss1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -298,7 +234,7 @@
             <Button
                 android:id="@+id/observeForeverNoLoss1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -312,7 +248,7 @@
             <Button
                 android:id="@+id/observeNoStickyNoLoss1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -326,7 +262,7 @@
             <Button
                 android:id="@+id/observeForeverNoStickyNoLoss1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
 
                 android:layout_weight="1"
@@ -339,6 +275,70 @@
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/post1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/postM"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次postValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/set1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="setValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/setM"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="15dp"
+
+            android:text="5次setValue"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout

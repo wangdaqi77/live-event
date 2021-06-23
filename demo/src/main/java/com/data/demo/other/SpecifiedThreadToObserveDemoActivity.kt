@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
-import androidx.lifecycle.mutable.MixedBackgroundLiveEvent
+import androidx.lifecycle.mixed.MixedBackgroundLiveEvent
 import com.data.demo.R
 import kotlinx.android.synthetic.main.activity_specified_thread_observe_event.*
 import java.text.SimpleDateFormat
@@ -21,8 +21,6 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()
-    private val tm = Executors.newFixedThreadPool(count)
-    private val customGlobalEventDispatcher = CustomGlobalEventDispatcher() // 全局的分发器
     private val customEventDispatcher = CustomEventDispatcher() // 单个Observer指定的分发器
     private var backgroundOpen = false
 
@@ -38,13 +36,32 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         }
     }
 
+    // 等同于 BackgroundObserver<String>(EventDispatcher.DEFAULT)
     private val observer =  Observer<String>{ t ->
-        log("onChanged thread:${Thread.currentThread().name}", t)
+        log("onChanged EventDispatcher.DEFAULT - thread:${Thread.currentThread().name}", t)
     }
 
-    private val specifiedThreadBackgroundObserver = object : BackgroundObserver<String>(customEventDispatcher){
+    private val observera =  object:BackgroundObserver<String>(EventDispatcher.MAIN){
         override fun onChanged(t: String) {
-            log("onChanged thread:${Thread.currentThread().name}", t)
+            log("onChanged EventDispatcher.MAIN - thread:${Thread.currentThread().name}", t)
+        }
+    }
+
+    private val observerb =  object:BackgroundObserver<String>(EventDispatcher.BACKGROUND){
+        override fun onChanged(t: String) {
+            log("onChanged EventDispatcher.BACKGROUND - thread:${Thread.currentThread().name}", t)
+        }
+    }
+
+    private val observerc =  object:BackgroundObserver<String>(EventDispatcher.ASYNC){
+        override fun onChanged(t: String) {
+            log("onChanged EventDispatcher.ASYNC - thread:${Thread.currentThread().name}", t)
+        }
+    }
+
+    private val observerd = object : BackgroundObserver<String>(customEventDispatcher){
+        override fun onChanged(t: String) {
+            log("onChanged customEventDispatcher - thread:${Thread.currentThread().name}", t)
         }
     }
 
@@ -60,13 +77,16 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         })
 
 
+        log("setValue", "init event")
         setValue("init event")
 
         initListener()
 
-        addGlobalDispatcher.performClick()
         observe.performClick()
+        observea.performClick()
+        observeb.performClick()
         observec.performClick()
+        observed.performClick()
     }
 
     private fun initListener() {
@@ -128,33 +148,49 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
             }
         }
 
-
-        addGlobalDispatcher.setOnClickListener {
-
-            log("设置全局事件分发器（指定全局线程分发事件）", "setCustomGlobalBackgroundEventDispatcher")
-            BackgroundLiveEvent.setCustomGlobalBackgroundEventDispatcher(customGlobalEventDispatcher)
-        }
-        removeGlobalDispatcher.setOnClickListener {
-            log("移除全局事件分发器", "removeCustomGlobalBackgroundEventDispatcher")
-            BackgroundLiveEvent.removeCustomGlobalBackgroundEventDispatcher()
-        }
-
         observe.setOnClickListener {
-            log("添加观察器", "observe")
+            log("添加观察器", "observe - EventDispatcher.DEFAULT - 默认后台线程接收，不建议做耗时操作")
             backgroundLiveEvent.observe(this, observer)
         }
         observe1.setOnClickListener {
-            log("移除观察器", "observe")
+            log("移除观察器", "observe - EventDispatcher.DEFAULT - 默认后台线程接收，不建议做耗时操作")
             backgroundLiveEvent.removeObserver(observer)
         }
 
+        observea.setOnClickListener {
+            log("添加观察器", "observe - EventDispatcher.MAIN - 主线程接收，不建议做耗时操作")
+            backgroundLiveEvent.observe(this, observera)
+        }
+        observea1.setOnClickListener {
+            log("移除观察器", "observe - EventDispatcher.MAIN - 主线程接收，不建议做耗时操作")
+            backgroundLiveEvent.removeObserver(observera)
+        }
+
+        observeb.setOnClickListener {
+            log("添加观察器", "observe - EventDispatcher.BACKGROUND - 后台线程接收，不建议做耗时操作")
+            backgroundLiveEvent.observe(this, observerb)
+        }
+        observeb1.setOnClickListener {
+            log("移除观察器", "observe - EventDispatcher.BACKGROUND - 后台线程接收，不建议做耗时操作")
+            backgroundLiveEvent.removeObserver(observerb)
+        }
+
         observec.setOnClickListener {
-            log("添加观察器BackgroundObserver-自定义分发器（指定线程）", "observe")
-            backgroundLiveEvent.observe(this, specifiedThreadBackgroundObserver)
+            log("添加观察器", "observe - EventDispatcher.ASYNC - 后台线程接收，可做耗时操作")
+            backgroundLiveEvent.observe(this, observerc)
         }
         observec1.setOnClickListener {
-            log("移除观察器BackgroundObserver", "observe")
-            backgroundLiveEvent.removeObserver(specifiedThreadBackgroundObserver)
+            log("移除观察器", "observe - EventDispatcher.ASYNC - 后台线程接收，可做耗时操作")
+            backgroundLiveEvent.removeObserver(observerc)
+        }
+
+        observed.setOnClickListener {
+            log("添加观察器", "observe - customEventDispatcher - 单独指定自定义线程接收")
+            backgroundLiveEvent.observe(this, observerd)
+        }
+        observed1.setOnClickListener {
+            log("移除观察器", "observe - customEventDispatcher - 单独指定自定义线程接收")
+            backgroundLiveEvent.removeObserver(observerd)
         }
 
     }
@@ -173,7 +209,7 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
     private fun log(tag:String, value:String? = null){
 
-        Log.e("DEMO", "tag: $tag,      $value")
+        Log.e("DEMO", "tag: $tag→      $value")
 
         val dateFormat = SimpleDateFormat("HH:mm:ss.SSS")
         val currentTimeMillis = System.currentTimeMillis()
@@ -181,7 +217,7 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
         fullscreen_content.post {
             fullscreen_content.append(
-                "\n${timeText} tag: $tag, $value\n"
+                "\n${timeText} tag: $tag→ $value\n"
             )
         }
 
@@ -190,26 +226,13 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         backgroundOpen = false
-        BackgroundLiveEvent.removeCustomGlobalBackgroundEventDispatcher()
         super.onDestroy()
-    }
-
-    class CustomGlobalEventDispatcher: EventDispatcher {
-        private val threadExecutor = Executors.newSingleThreadExecutor(object :ThreadFactory{
-            override fun newThread(r: Runnable): Thread {
-                return Thread(r, "指定的全局线程")
-            }
-
-        })
-        override fun dispatch(runnable: Runnable) {
-            threadExecutor.execute(runnable)
-        }
     }
 
     class CustomEventDispatcher: EventDispatcher {
         private val threadExecutor = Executors.newSingleThreadExecutor(object :ThreadFactory{
             override fun newThread(r: Runnable): Thread {
-                return Thread(r, "BackgroundObserver指定的线程")
+                return Thread(r, "单独指定的线程")
             }
 
         })

@@ -8,20 +8,24 @@ import androidx.lifecycle.internal.*
  * LiveEvent is a event holder class for observe event on main thread, that
  * can be observed within a given lifecycle.
  *
- * If you need observe event on background thread, you can use [BackgroundLiveEvent]
+ * If you need observe event on background thread, you can use [BackgroundLiveEvent].
  *
- * @param T The type of data hold by this instance
+ * @param T The type of data hold by this instance.
  */
-open class LiveEvent<T> : LiveData<T> {
+open class LiveEvent<T> : MutableLiveData<T> {
 
     constructor() : super()
 
     constructor(value: T) : super(value)
 
-
     @Volatile
     private var mLostPendingValueHead: LostValue.Head<T>? = null
-    private val mObservers by lazy(LazyThreadSafetyMode.NONE) { LiveDataReflect.getObservers(this) }
+    private val mObservers by lazy(LazyThreadSafetyMode.NONE) { InternalReflect.getObservers(this) }
+    private var noLossObserverCount = 0
+    private val hasNoLossObserver
+        get() = noLossObserverCount > 0
+    private val mDispatchingValue
+        get() = InternalReflect.mDispatchingValue(this)
     @Suppress("UNCHECKED_CAST")
     private val mPostValueRunnable = Runnable {
         var newValue: Any
@@ -37,7 +41,8 @@ open class LiveEvent<T> : LiveData<T> {
         super.observe(owner, observer)
     }
 
-    private  fun observeForeverInner(observer: Observer<in T>) {
+    private fun observeForeverInner(observer: Observer<in T>) {
+        if (observer is NoLossObserverBox) noLossObserverCount++
         super.observeForever(observer)
     }
 
@@ -54,6 +59,7 @@ open class LiveEvent<T> : LiveData<T> {
     }
 
     private fun detachNoLossValueObserver(observer: NoLossObserverBox<T>) {
+        noLossObserverCount--
         observer.detachObserver()
         observer.activeStateChanged(false)
     }
@@ -76,6 +82,25 @@ open class LiveEvent<T> : LiveData<T> {
             if (observerBox is NoLossObserverBox) {
                 head.eachToTail(block = observerBox::onChanged)
             }
+        }
+    }
+
+    private fun considerNotifyForNoLossObserver() {
+        @Suppress("INACCESSIBLE_TYPE")
+        val iterator = mObservers.                                                                                                                                                                                                                                                                                    iteratorWithAdditions() as Iterator<Map.Entry<Observer<in T>, *>>
+
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            val observerWrapper = entry.value!!
+            var observer = entry.key
+            while (observer is ObserverBox) {
+                if (observer is NoLossObserverBox) {
+                    InternalReflect.considerNotify(this, observerWrapper)
+                    break
+                }
+                observer = observer.observer
+            }
+
         }
     }
 
@@ -362,7 +387,12 @@ open class LiveEvent<T> : LiveData<T> {
     @MainThread
     override fun setValue(value: T) {
         assertMainThread("setValue")
-        // considerNotifyForPossibleLostPendingValue(value)
+
+        // dispatchingValue to noLoss
+        if (hasNoLossObserver && mDispatchingValue) {
+            considerNotifyForNoLossObserver()
+        }
+
         super.setValue(value)
     }
 

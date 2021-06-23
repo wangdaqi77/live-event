@@ -9,17 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
-import androidx.lifecycle.MutableBackgroundLiveEvent
-import androidx.lifecycle.MutableLiveEvent
+import androidx.lifecycle.BackgroundLiveEvent
+import androidx.lifecycle.LiveEvent
 import kotlinx.android.synthetic.main.activity_mutable.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-abstract class BaseMutableDemoActivity : AppCompatActivity() {
-    abstract val liveEvent: MutableLiveEvent<String>
-    abstract val backgroundLiveEvent: MutableBackgroundLiveEvent<String>
+abstract class BaseDemoActivity : AppCompatActivity() {
+    abstract val liveEvent: LiveEvent<String>
+    abstract val backgroundLiveEvent: BackgroundLiveEvent<String>
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()
@@ -53,6 +53,8 @@ abstract class BaseMutableDemoActivity : AppCompatActivity() {
 
         })
 
+        logForLiveEvent("setValue", "init event")
+        logForBackgroundLiveEvent("setValue", "init event")
         setValue("init event")
 
         observeForMethod("observe")
@@ -208,7 +210,7 @@ abstract class BaseMutableDemoActivity : AppCompatActivity() {
     private fun log(content:TextView, nsv: NestedScrollView, tag:String, value:String? = null, isBackground :Boolean){
         Log.e(
             "DEMO",
-            "${if (isBackground) "BackgroundLiveEvent" else "LiveEvent"}    tag: $tag,  $value"
+            "${if (isBackground) "BackgroundLiveEvent" else "LiveEvent"}    tag: $tag→  $value"
         )
 
 
@@ -216,7 +218,7 @@ abstract class BaseMutableDemoActivity : AppCompatActivity() {
         val currentTimeMillis = System.currentTimeMillis()
         val timeText = dateFormat.format(currentTimeMillis)
         content.post {
-            content.append("\n${timeText} tag: $tag, $value\n")
+            content.append("\n${timeText} tag: $tag→ $value\n")
         }
     }
 
