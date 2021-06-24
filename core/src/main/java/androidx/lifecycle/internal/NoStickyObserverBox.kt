@@ -1,9 +1,6 @@
 package androidx.lifecycle.internal
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 
 internal class AlwaysActiveNoStickyObserverBox<T> constructor(
     observer: Observer<in T>,
@@ -30,7 +27,9 @@ internal class LifecycleBoundNoStickyObserverBox<T> constructor(
 
     override fun detachObserver() {
         if (isBackground) {
-            InternalReflect.removeObserverSafe(mOwner, this)
+            BackgroundLiveEvent.run {
+                mOwner.backgroundLifecycle.removeObserver(this@LifecycleBoundNoStickyObserverBox)
+            }
         }else {
             mOwner.lifecycle.removeObserver(this)
         }
@@ -41,8 +40,7 @@ internal class LifecycleBoundNoStickyObserverBox<T> constructor(
 internal abstract class NoStickyObserverBox<T> constructor(
     override val observer: Observer<in T>,
     private val onChanged: (Observer<in T>, T) -> Unit
-) :
-    Observer<T>, ObserverBox<T> {
+) : Observer<T>, ObserverBox<T> {
     abstract var ignored: Boolean
     private fun shouldIgnored(): Boolean {
         val ignored = this.ignored
@@ -55,7 +53,7 @@ internal abstract class NoStickyObserverBox<T> constructor(
         onChanged(observer, value)
     }
 
-    open override fun isAttachedTo(owner: LifecycleOwner): Boolean = false
+    override fun isAttachedTo(owner: LifecycleOwner): Boolean = false
 
     open fun detachObserver() {}
 }

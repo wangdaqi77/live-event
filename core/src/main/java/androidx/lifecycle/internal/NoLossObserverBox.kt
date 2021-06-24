@@ -1,9 +1,7 @@
 package androidx.lifecycle.internal
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import androidx.lifecycle.BackgroundLiveEvent.Companion.backgroundLifecycle
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal class AlwaysActiveNoLossObserverBox<T> constructor(
@@ -44,7 +42,9 @@ internal class AlwaysActiveToLifecycleBoundNoLossObserverBox<T> constructor(
 
     override fun detachObserver() {
         if (isBackground) {
-            InternalReflect.removeObserverSafe(mOwner, this)
+            BackgroundLiveEvent.run {
+                mOwner.backgroundLifecycle.removeObserver(this@AlwaysActiveToLifecycleBoundNoLossObserverBox)
+            }
         }else {
             mOwner.lifecycle.removeObserver(this)
         }
