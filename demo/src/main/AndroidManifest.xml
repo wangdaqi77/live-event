@@ -18,8 +18,8 @@
         <activity android:name=".NoLossDemoActivity"/>
         <activity android:name=".NoStickyDemoActivity"/>
         <activity android:name=".NoStickyNoLossDemoActivity"/>
-        <activity android:name=".mixed.MixedLiveEventDemoActivity"/>
-        <activity android:name=".mixed.MixedBackgroundLiveEventDemoActivity"/>
+        <activity android:name=".LiveEventDemoActivity"/>
+        <activity android:name=".BackgroundLiveEventDemoActivity"/>
         <activity android:name=".other.SpecifiedThreadToObserveDemoActivity"/>
     </application>
 

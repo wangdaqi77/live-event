@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.lifecycle.liveevent.core">
+    package="wang.lifecycle">
 
     <application>
         <activity android:name="androidx.activity.ComponentActivity" />

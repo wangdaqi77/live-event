@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
-import androidx.lifecycle.mixed.MixedBackgroundLiveEvent
+import wang.lifecycle.MutableBackgroundLiveEvent
 import com.data.demo.R
 import kotlinx.android.synthetic.main.activity_specified_thread_observe_event.*
+import wang.lifecycle.BackgroundObserver
+import wang.lifecycle.EventDispatcher
 import java.text.SimpleDateFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -16,8 +18,8 @@ import java.util.concurrent.ThreadFactory
 
 
 class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
-    private var backgroundLiveEvent: MixedBackgroundLiveEvent<String> =
-        MixedBackgroundLiveEvent()
+    private var backgroundLiveEvent: MutableBackgroundLiveEvent<String> =
+        MutableBackgroundLiveEvent()
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()
@@ -41,19 +43,22 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         log("onChanged EventDispatcher.DEFAULT - thread:${Thread.currentThread().name}", t)
     }
 
-    private val observera =  object:BackgroundObserver<String>(EventDispatcher.MAIN){
+    private val observera =  object:
+        BackgroundObserver<String>(EventDispatcher.MAIN){
         override fun onChanged(t: String) {
             log("onChanged EventDispatcher.MAIN - thread:${Thread.currentThread().name}", t)
         }
     }
 
-    private val observerb =  object:BackgroundObserver<String>(EventDispatcher.BACKGROUND){
+    private val observerb =  object:
+        BackgroundObserver<String>(EventDispatcher.BACKGROUND){
         override fun onChanged(t: String) {
             log("onChanged EventDispatcher.BACKGROUND - thread:${Thread.currentThread().name}", t)
         }
     }
 
-    private val observerc =  object:BackgroundObserver<String>(EventDispatcher.ASYNC){
+    private val observerc =  object:
+        BackgroundObserver<String>(EventDispatcher.ASYNC){
         override fun onChanged(t: String) {
             log("onChanged EventDispatcher.ASYNC - thread:${Thread.currentThread().name}", t)
         }

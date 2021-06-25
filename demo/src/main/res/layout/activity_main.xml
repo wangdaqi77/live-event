@@ -1,50 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
     android:orientation="vertical">
-
     <Button
-        android:onClick="openLikeLiveDataDemo"
-        android:text="示例—像LiveData一样"
+        android:onClick="openLiveEventDemo"
+        android:text="示例—LiveEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
-        android:onClick="openNoStickyLiveEventDemo"
-        android:text="示例—没有粘性行为"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:onClick="openNoLossLiveEventDemo"
-        android:text="示例—没有丢弃行为"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:onClick="openNoStickyNoLossLiveEventDemo"
-        android:text="示例—没有粘性行为且没有丢弃行为"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:onClick="openMixedLiveEventDemo"
-        android:text="示例—可混合观察的LiveEvent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:onClick="openMixedBackgroundLiveEventDemo"
-        android:text="示例—可混合观察的BackgroundLiveEvent"
+        android:onClick="openBackgroundLiveEventDemo"
+        android:text="示例—BackgroundLiveEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
         android:onClick="openSpecifiedThreadToObserveEventDemo"
-        android:text="示例—BackgroundLiveEvent指定线程接收event"
+        android:text="示例—BackgroundLiveEvent指定线程接收事件"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
