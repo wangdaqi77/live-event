@@ -1,6 +1,5 @@
 package wang.lifecycle
 
-import android.os.Looper
 import androidx.arch.core.internal.SafeIterableMap
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
@@ -41,11 +40,10 @@ import java.util.*
 open class BackgroundLiveEvent<T> {
 
     companion object {
-        private const val START_VERSION = -1
-        private val NOT_SET = InternalLiveData.NOT_SET
+        private const val START_VERSION = InternalSupportedLiveData.START_VERSION
+        private val NOT_SET = InternalSupportedLiveData.NOT_SET
         private val sDefaultScheduler = EventDispatcher.DEFAULT as InternalDispatcher
         private val sBackgroundLifecycleRegistry = WeakHashMap<LifecycleOwner, LifecycleRegistry>()
-
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
             get() = sBackgroundLifecycleRegistry[this] ?: throw RuntimeException("UnKnow!")
 
@@ -94,7 +92,7 @@ open class BackgroundLiveEvent<T> {
     private var mDispatchInvalidated = false
     @Volatile
     private var mLostPendingValueHead : LostValue.Head<T>? = null
-    private val mThreadValueMap by lazy(LazyThreadSafetyMode.PUBLICATION) { ThreadValueMap() }
+    private val mThreadValueMap by lazy { ThreadValueMap() }
     private var noLossObserverCount = 0
     private val hasNoLossObserver
         get() = noLossObserverCount > 0

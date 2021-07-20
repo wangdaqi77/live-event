@@ -13,7 +13,7 @@ import wang.lifecycle.internal.*
  *
  * @param T The type of data hold by this instance.
  */
-open class LiveEvent<T> : InternalLiveData<T> {
+open class LiveEvent<T> : InternalSupportedLiveData<T> {
 
     constructor() : super()
 
