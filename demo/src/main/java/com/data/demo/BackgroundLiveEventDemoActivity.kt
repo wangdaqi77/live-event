@@ -15,8 +15,7 @@ import java.util.concurrent.Executors
 
 
 class BackgroundLiveEventDemoActivity : AppCompatActivity() {
-    private var backgroundLiveEvent: MutableBackgroundLiveEvent<String> =
-        MutableBackgroundLiveEvent()
+    private var backgroundLiveEvent: MutableBackgroundLiveEvent<String> = MutableBackgroundLiveEvent()
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()

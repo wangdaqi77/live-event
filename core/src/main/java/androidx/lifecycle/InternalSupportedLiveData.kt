@@ -17,7 +17,6 @@ open class InternalSupportedLiveData<T> : LiveData<T> {
                 )
             }
         }
-
     }
 
     internal val mDataLock : Any

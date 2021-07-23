@@ -26,47 +26,12 @@
                 android:gravity="center"
                 android:minHeight="15dp"
 
-                android:text="observe - EventDispatcher.DEFAULT\n默认后台线程接收，不建议做耗时操作"
+                android:text="observe - 默认\n默全局统一的子线程接收，不建议做耗时操作"
                 android:textColor="@android:color/black"
                 android:textSize="10sp" />
 
             <Button
                 android:id="@+id/observe1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-
-
-
-                android:gravity="center"
-                android:minHeight="15dp"
-
-                android:text="←移除"
-                android:textColor="@android:color/black"
-                android:textSize="10sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <Button
-                android:id="@+id/observea"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-
-
-                android:layout_weight="2"
-                android:gravity="center"
-                android:minHeight="15dp"
-
-                android:text="observe - EventDispatcher.MAIN\n主线程接收，不建议做耗时操作"
-                android:textColor="@android:color/black"
-                android:textSize="10sp" />
-
-            <Button
-                android:id="@+id/observea1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
@@ -137,6 +102,41 @@
 
             <Button
                 android:id="@+id/observec1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+
+
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="←移除"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/observea"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+
+                android:layout_weight="2"
+                android:gravity="center"
+                android:minHeight="15dp"
+
+                android:text="observe - EventDispatcher.MAIN\n主线程接收，不建议做耗时操作"
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/observea1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 

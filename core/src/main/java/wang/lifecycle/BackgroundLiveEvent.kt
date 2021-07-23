@@ -42,7 +42,7 @@ open class BackgroundLiveEvent<T> {
     companion object {
         private const val START_VERSION = InternalSupportedLiveData.START_VERSION
         private val NOT_SET = InternalSupportedLiveData.NOT_SET
-        private val sDefaultScheduler = EventDispatcher.DEFAULT as InternalDispatcher
+        private val sDefaultScheduler = InternalDispatcher("default-dispatcher")
         private val sBackgroundLifecycleRegistry = WeakHashMap<LifecycleOwner, LifecycleRegistry>()
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
             get() = sBackgroundLifecycleRegistry[this] ?: throw RuntimeException("UnKnow!")
@@ -55,13 +55,16 @@ open class BackgroundLiveEvent<T> {
                             // LifecycleRegistry - main -> sDefaultScheduler
                             InternalReflect.closeCheckManiThreadOfLifecycleRegistry(this)
                             val runnable = Runnable {
-                                val lifecycleEventObserver = LifecycleEventObserver { _, event ->
-                                    sDefaultScheduler.dispatch{
-                                        currentState = event.targetState
+                                val lifecycleEventObserver = object : LifecycleEventObserver {
+                                    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                                         if (event == Lifecycle.Event.ON_DESTROY) {
-                                            sBackgroundLifecycleRegistry.remove(owner)
+                                            owner.lifecycle.removeObserver(this)
+                                        }
+                                        sDefaultScheduler.dispatch{
+                                            currentState = event.targetState
                                         }
                                     }
+
                                 }
                                 owner.lifecycle.addObserver(lifecycleEventObserver)
                             }
@@ -833,10 +836,9 @@ open class BackgroundLiveEvent<T> {
  */
 interface EventDispatcher {
     companion object {
-        val DEFAULT : EventDispatcher = InternalDispatcher("default-dispatcher")
-        val MAIN : EventDispatcher = InternalMainDispatcher()
         val BACKGROUND : EventDispatcher = InternalDispatcher("background-event-dispatcher")
         val ASYNC : EventDispatcher = InternalAsyncDispatcher()
+        val MAIN : EventDispatcher = InternalMainDispatcher()
     }
 
     /**
@@ -852,5 +854,6 @@ interface EventDispatcher {
  * @param T The type of the parameter
  *
  * @see BackgroundLiveEvent BackgroundLiveEvent - for a usage description.
+ * @see EventDispatcher     EventDispatcher - has default implementation.
  */
-abstract class BackgroundObserver<T> (internal val dispatcher: EventDispatcher = EventDispatcher.DEFAULT) : Observer<T>
+abstract class BackgroundObserver<T> (internal val dispatcher: EventDispatcher) : Observer<T>

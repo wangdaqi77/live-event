@@ -1,6 +1,7 @@
 package wang.lifecycle.test.other
 
 import android.os.Looper
+import androidx.lifecycle.Observer
 import wang.lifecycle.BackgroundObserver
 import wang.lifecycle.EventDispatcher
 import wang.lifecycle.test.base.BaseTest
@@ -19,10 +20,8 @@ class SpecifiedThreadToObserveTest : BaseTest() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         scenario.onActivity {
-            liveEvent.observe(it, object : BackgroundObserver<String>(){
-                override fun onChanged(t: String?) {
-                    assertEquals("default-dispatcher", Thread.currentThread().name)
-                }
+            liveEvent.observe(it, Observer {
+                assertEquals("default-dispatcher", Thread.currentThread().name)
             })
 
             liveEvent.observe(it, object : BackgroundObserver<String>(

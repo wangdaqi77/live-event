@@ -8,7 +8,7 @@ live-event
 它主要包含以下两个类：
 
  * LiveEvent - 一个在给定的生命周期内可观察的事件持有类，它继承LiveData，内部在主线程管理和分发事件。
- * BackgroundLiveEvent - 一个在给定的生命周期内可观察的事件持有类，内部在后台线程管理和分发事件。
+ * BackgroundLiveEvent - 一个在给定的生命周期内可观察的事件持有类，内部在全局统一的子线程管理和分发事件。
 
 如果[直接使用请点这里](#开始)，后续再来阅读文档。
 
@@ -72,7 +72,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.wangdaqi77.live-event:core:1.5.1"
+    implementation "com.github.wangdaqi77.live-event:core:1.5.2"
     // 务必依赖官方组件
     implementation "androidx.lifecycle:lifecycle-core:2.3.1"
 }
@@ -118,24 +118,42 @@ dependencies {
   val liveEvent = MutableBackgroundLiveEvent<String>(EVENT_INIT)
 
   // 2.观察
-  // 2.1 使用Observer类型观察时，在全局统一的后台线程分发事件，Observer{ }等同于BackgroundObserver<String>(dispatcher = EventDispatcher.DEFAULT)
+  // 2.1 使用Observer观察时，会在全局默全局统一的子线程接收事件，此线程也用于执行BackgroundLiveEvent内部的其他逻辑。
   liveEvent.observe(LifecycleOwner, Observer{ event ->
-      // 在后台线程中将依次接收到EVENT_INIT, "事件B"
       // 线程名为default-dispatcher
+      // 不建议在此做耗时操作
   })
 
-  // 2.2 使用BackgroundObserver类型观察时，可以指定一个事件分发器（指定线程接收事件），作用范围仅限该BackgroundObserver.
-  // SDK预先实现了EventDispatcher.DEFAULT、EventDispatcher.MAIN、EventDispatcher.BACKGROUND、EventDispatcher.ASYNC，其中EventDispatcher.DEFAULT作为默认实现
+  // 2.2 使用BackgroundObserver观察时，可以指定一个事件分发器，用于指定后台线程接收事件
+  // SDK预先实现了EventDispatcher.BACKGROUND、EventDispatcher.ASYNC、EventDispatcher.MAIN
+
+  // EventDispatcher.BACKGROUND
   liveEvent.observe(LifecycleOwner, object: BackgroundObserver<String>(dispatcher = EventDispatcher.BACKGROUND) {
       override fun onChanged(t: String) {
-          // 在后台线程中将依次接收到EVENT_INIT, "事件B"
           // 线程名为background-event-dispatcher
+          // 不建议在此做耗时操作
       }
   })
 
+  // EventDispatcher.ASYNC
+  liveEvent.observe(LifecycleOwner, object: BackgroundObserver<String>(dispatcher = EventDispatcher.ASYNC) {
+      override fun onChanged(t: String) {
+          // 线程名为pool-async-event-dispatcher-thread-xx
+          // 可在此做耗时操作
+      }
+  })
+
+  // EventDispatcher.MAIN
+  liveEvent.observe(LifecycleOwner, object: BackgroundObserver<String>(dispatcher = EventDispatcher.MAIN) {
+      override fun onChanged(t: String) {
+          // 线程名为main
+          // 不建议在此做耗时操作
+      }
+  })
+
+  // custom
   liveEvent.observe(LifecycleOwner, object: BackgroundObserver<String>(dispatcher = yourCustomDispatcher) {
       override fun onChanged(t: String) {
-          // 在后台线程中将依次接收到EVENT_INIT, "事件B"
           // 线程名为yourCustom
       }
   })

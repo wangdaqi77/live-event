@@ -1,5 +1,6 @@
 package wang.lifecycle
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
@@ -102,10 +103,17 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         }
     }
 
+    private fun checkObserver(observer: Observer<*>){
+        if (observer is BackgroundObserver) {
+            Log.w("live-event", "BackgroundObserver is not supported in LiveEvent, you maybe want to use BackgroundLiveEvent.")
+        }
+    }
+
     /**
      * @see LiveData.observe
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        checkObserver(observer)
         observeInner(owner, observer)
     }
 
@@ -113,6 +121,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      * @see LiveData.observeForever
      */
     override fun observeForever(observer: Observer<in T>) {
+        checkObserver(observer)
         observeForeverInner(observer)
     }
 
@@ -123,6 +132,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeNoSticky(owner: LifecycleOwner, observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeNoSticky")
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
@@ -169,6 +179,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeForeverNoSticky(observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeForeverNoSticky")
 
         mObservers.eachObserverBox{
@@ -208,6 +219,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeNoLoss(owner: LifecycleOwner, observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeNoLoss")
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
@@ -241,6 +253,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeForeverNoLoss(observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeForeverNoLoss")
 
         mObservers.eachObserverBox{
@@ -268,6 +281,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeNoStickyNoLoss(owner: LifecycleOwner, observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeNoStickyNoLoss")
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
@@ -316,6 +330,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     @MainThread
     open fun observeForeverNoStickyNoLoss(observer: Observer<in T>) {
+        checkObserver(observer)
         assertMainThread("observeForeverNoStickyNoLoss")
 
         mObservers.eachObserverBox {
@@ -377,7 +392,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
             }
         }
 
-        removeObservers(owner)
+        super.removeObservers(owner)
     }
 
     @MainThread

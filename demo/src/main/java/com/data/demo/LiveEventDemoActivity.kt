@@ -15,8 +15,7 @@ import java.util.concurrent.Executors
 
 
 class LiveEventDemoActivity : AppCompatActivity() {
-    private var liveEvent: MutableLiveEvent<String> =
-        MutableLiveEvent()
+    private var liveEvent: MutableLiveEvent<String> = MutableLiveEvent()
     private var b1 : ExecutorService?=null
     private val count = 5
     private val t1 = Executors.newSingleThreadExecutor()

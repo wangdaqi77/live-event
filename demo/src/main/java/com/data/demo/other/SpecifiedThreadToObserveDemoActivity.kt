@@ -38,9 +38,8 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         }
     }
 
-    // 等同于 BackgroundObserver<String>(EventDispatcher.DEFAULT)
     private val observer =  Observer<String>{ t ->
-        log("onChanged EventDispatcher.DEFAULT - thread:${Thread.currentThread().name}", t)
+        log("onChanged 默认 - thread:${Thread.currentThread().name}", t)
     }
 
     private val observera =  object:
@@ -154,11 +153,11 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         }
 
         observe.setOnClickListener {
-            log("添加观察器", "observe - EventDispatcher.DEFAULT - 默认后台线程接收，不建议做耗时操作")
+            log("添加观察器", "observe - 默认 - 默全局统一的子线程接收，不建议做耗时操作")
             backgroundLiveEvent.observe(this, observer)
         }
         observe1.setOnClickListener {
-            log("移除观察器", "observe - EventDispatcher.DEFAULT - 默认后台线程接收，不建议做耗时操作")
+            log("移除观察器", "observe - 默认 - 默全局统一的子线程接收，不建议做耗时操作")
             backgroundLiveEvent.removeObserver(observer)
         }
 
