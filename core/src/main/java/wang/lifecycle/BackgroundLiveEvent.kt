@@ -43,41 +43,12 @@ open class BackgroundLiveEvent<T> {
         private const val START_VERSION = InternalSupportedLiveData.START_VERSION
         private val NOT_SET = InternalSupportedLiveData.NOT_SET
         private val sDefaultScheduler = InternalDispatcher("default-dispatcher")
-        private val sBackgroundLifecycleRegistry = WeakHashMap<LifecycleOwner, LifecycleRegistry>()
+        private val sBackgroundLifecycleBridge = BackgroundLifecycleBridge(sDefaultScheduler)
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
-            get() = sBackgroundLifecycleRegistry[this] ?: throw RuntimeException("UnKnow!")
+            get() = sBackgroundLifecycleBridge.getBackgroundLifecycle(this) ?: throw RuntimeException("UnKnow!")
 
-        private fun checkAndAttachBackgroundLifecycle(owner: LifecycleOwner) {
-            if (sBackgroundLifecycleRegistry[owner] == null) {
-                synchronized(this) {
-                    if (sBackgroundLifecycleRegistry[owner] == null) {
-                        sBackgroundLifecycleRegistry[owner] = LifecycleRegistry(owner).apply {
-                            // LifecycleRegistry - main -> sDefaultScheduler
-                            InternalReflect.closeCheckManiThreadOfLifecycleRegistry(this)
-                            val runnable = Runnable {
-                                val lifecycleEventObserver = object : LifecycleEventObserver {
-                                    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                                        if (event == Lifecycle.Event.ON_DESTROY) {
-                                            owner.lifecycle.removeObserver(this)
-                                        }
-                                        sDefaultScheduler.dispatch{
-                                            currentState = event.targetState
-                                        }
-                                    }
-
-                                }
-                                owner.lifecycle.addObserver(lifecycleEventObserver)
-                            }
-
-                            if (InternalMainExecutor.isMainThread) {
-                                runnable.run()
-                            }else {
-                                InternalMainExecutor.execute(runnable)
-                            }
-                        }
-                    }
-                }
-            }
+        private fun tryAttachBackgroundLifecycle(owner: LifecycleOwner) {
+            sBackgroundLifecycleBridge.tryAttachBackgroundLifecycle(owner)
         }
     }
 
@@ -290,7 +261,7 @@ open class BackgroundLiveEvent<T> {
             return
         }
 
-        checkAndAttachBackgroundLifecycle(owner)
+        tryAttachBackgroundLifecycle(owner)
 
         sDefaultScheduler.dispatch {
             if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
@@ -356,7 +327,7 @@ open class BackgroundLiveEvent<T> {
             return
         }
 
-        checkAndAttachBackgroundLifecycle(owner)
+        tryAttachBackgroundLifecycle(owner)
 
         sDefaultScheduler.dispatch {
             if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
@@ -450,7 +421,7 @@ open class BackgroundLiveEvent<T> {
             return
         }
 
-        checkAndAttachBackgroundLifecycle(owner)
+        tryAttachBackgroundLifecycle(owner)
 
         sDefaultScheduler.dispatch {
             if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
@@ -515,7 +486,7 @@ open class BackgroundLiveEvent<T> {
             return
         }
 
-        checkAndAttachBackgroundLifecycle(owner)
+        tryAttachBackgroundLifecycle(owner)
 
         sDefaultScheduler.dispatch {
             if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
