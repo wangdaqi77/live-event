@@ -4,7 +4,6 @@ afterEvaluate {
     if (plugins.hasPlugin('com.android.library')) {
         apply plugin: 'maven-publish'
         def buildType = "release"
-        ext._jitpact_publish_task_name = ":${name}:publish${buildType.capitalize()}PublicationToMavenLocal"
         publishing {
             publications {
                 "${buildType}"(MavenPublication) {
@@ -21,44 +20,25 @@ afterEvaluate {
                     "generate${buildType.capitalize()}BuildConfig",
             ]
             skippedTasks.forEach{ name ->
-                tasks.named(name) { task->
+                def task = tasks.findByName(name)
+                if (task != null) {
                     task.enabled = false
                 }
             }
         }
     }else {
-        apply plugin: 'java'
-        apply plugin: 'maven'
+        apply plugin: 'java-library'
+        apply plugin: 'maven-publish'
 
-        task sourcesJar(type: Jar, dependsOn: classes) {
-            archiveClassifier.set(project.provider { 'sources' })
-            from sourceSets.main.allSource
-        }
-
-        task javadocJar(type: Jar, dependsOn: javadoc) {
-            archiveClassifier.set(project.provider { 'javadoc' })
-            from javadoc.destinationDir
-        }
-
-        artifacts {
-            archives sourcesJar
-            archives javadocJar
-        }
-
-        // the project will publish artifacts to jitpack,
-        // that artifact info can be like ${groupId}.${rootProjectName}:${projectName}:${version}
-        afterEvaluate { Project selfProject ->
-            // publish all for jitpack
-            rootProject.allprojects { Project subProject ->
-                if (subProject != selfProject && subProject.plugins.hasPlugin('maven-publish')) {
-                    if (subProject.ext._jitpact_publish_task_name != null) {
-                        selfProject.tasks.named("install") { task ->
-                            task.dependsOn(subProject.ext._jitpact_publish_task_name)
-                        }
-                    }
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    from components.java
+                    groupId = group
+                    artifactId = "${project.name}"
+                    version = project.version
                 }
             }
-
         }
     }
 
