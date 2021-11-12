@@ -9,16 +9,17 @@ import org.junit.Before
 
 abstract class BaseTest{
     companion object {
-        const val EVENT_INIT = "initEvent"
+        const val EVENT_INIT = "EVENT_INIT"
     }
 
     lateinit var scenario: ActivityScenario<ComponentActivity>
 
-    fun newTestRunner(methodName: String) =
-        TestRunner.newRunner<ComponentActivity, String>(
+    fun newObserveTestRunner(methodName: String, desc: String? = null) =
+        ObserveTestRunner.newRunner<ComponentActivity, String>(
             scenario,
             this.javaClass.simpleName,
-            methodName
+            methodName,
+            desc
         )
 
     @CallSuper

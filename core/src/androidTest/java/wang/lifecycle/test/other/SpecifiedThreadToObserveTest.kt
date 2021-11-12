@@ -21,7 +21,11 @@ class SpecifiedThreadToObserveTest : BaseTest() {
 
         scenario.onActivity {
             liveEvent.observe(it, Observer {
-                assertEquals("default-dispatcher", Thread.currentThread().name)
+                assertEquals(
+                    expected = "default-dispatcher",
+                    actual = Thread.currentThread().name,
+                    message = "使用Observer类型，应该是统一分发事件的后台线程"
+                )
             })
 
             liveEvent.observe(it, object : BackgroundObserver<String>(
@@ -34,7 +38,11 @@ class SpecifiedThreadToObserveTest : BaseTest() {
             liveEvent.observe(it, object : BackgroundObserver<String>(
                 EventDispatcher.BACKGROUND){
                 override fun onChanged(t: String?) {
-                    assertEquals("background-event-dispatcher", Thread.currentThread().name)
+                    assertEquals(
+                        expected = "background-event-dispatcher",
+                        actual = Thread.currentThread().name,
+                        message = "使用BackgroundObserver类型并且使用EventDispatcher.BACKGROUND，应该是EventDispatcher.BACKGROUND指定的线程"
+                    )
                 }
             })
 
