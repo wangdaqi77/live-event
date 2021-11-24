@@ -1,4 +1,4 @@
-package wang.lifecycle.test.other
+package wang.lifecycle.test
 
 import androidx.lifecycle.Observer
 import wang.lifecycle.MutableBackgroundLiveEvent
@@ -14,7 +14,8 @@ import kotlin.test.assertTrue
 class ActiveTest : BaseTest() {
 
     @Test
-    fun MutableLiveEvent_testActive() {
+    fun test_LiveEvent_testActive() {
+        // 不要在锁屏状态下测试
 
         var active = false
         val liveEvent = object : MutableLiveEvent<String>(EVENT_INIT) {
@@ -55,7 +56,8 @@ class ActiveTest : BaseTest() {
 
 
     @Test
-    fun MutableBackgroundLiveEvent_testActive() {
+    fun test_BackgroundLiveEvent_testActive() {
+        // 不要在锁屏状态下测试
 
         var active = false
         val liveEvent = object : MutableBackgroundLiveEvent<String>(EVENT_INIT) {

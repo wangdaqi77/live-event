@@ -11,11 +11,11 @@ import org.junit.runner.RunWith
 class LiveEventTest : BaseTest() {
 
     @Test
-    fun MutableLiveEvent_observe_testSetValueB2F() {
+    fun test_LiveEvent_observe_byCallSetValueB2F() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observe_testSetValueB2F",
+            methodName = "test_LiveEvent_observe_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -37,11 +37,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoSticky_testSetValueB2F() {
+    fun test_LiveEvent_observeNoSticky_byCallSetValueB2F() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoSticky_testSetValueB2F",
+            methodName = "test_LiveEvent_observeNoSticky_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -63,11 +63,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoLoss_testSetValueB2F() {
+    fun test_LiveEvent_observeNoLoss_byCallSetValueB2F() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoLoss_testSetValueB2F",
+            methodName = "test_LiveEvent_observeNoLoss_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -88,11 +88,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoStickyNoLoss_testSetValueB2F() {
+    fun test_LiveEvent_observeNoStickyNoLoss_byCallSetValueB2F() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoStickyNoLoss_testSetValueB2F",
+            methodName = "test_LiveEvent_observeNoStickyNoLoss_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -113,11 +113,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observe_testPostValue() {
+    fun test_LiveEvent_observe_byCallPostValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observe_testPostValue",
+            methodName = "test_LiveEvent_observe_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -135,11 +135,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoSticky_testPostValue() {
+    fun test_LiveEvent_observeNoSticky_byCallPostValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoSticky_testPostValue",
+            methodName = "test_LiveEvent_observeNoSticky_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -157,11 +157,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoLoss_testPostValue() {
+    fun test_LiveEvent_observeNoLoss_byCallPostValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoLoss_testPostValue",
+            methodName = "test_LiveEvent_observeNoLoss_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -178,11 +178,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoStickyNoLoss_testPostValue() {
+    fun test_LiveEvent_observeNoStickyNoLoss_byCallPostValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoStickyNoLoss_testPostValue",
+            methodName = "test_LiveEvent_observeNoStickyNoLoss_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -199,11 +199,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observe_testNestedCallSetValue() {
+    fun test_LiveEvent_observe_byNestedCallSetValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observe_testNestedCallSetValue",
+            methodName = "test_LiveEvent_observe_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -226,11 +226,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoSticky_testNestedCallSetValue() {
+    fun test_LiveEvent_observeNoSticky_byNestedCallSetValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoSticky_testNestedCallSetValue",
+            methodName = "test_LiveEvent_observeNoSticky_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -253,11 +253,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoLoss_testNestedCallSetValue() {
+    fun test_LiveEvent_observeNoLoss_byNestedCallSetValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoLoss_testNestedCallSetValue",
+            methodName = "test_LiveEvent_observeNoLoss_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -279,11 +279,11 @@ class LiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableLiveEvent_observeNoStickyNoLoss_testNestedCallSetValue() {
+    fun test_LiveEvent_observeNoStickyNoLoss_byNestedCallSetValue() {
         val liveEvent = MutableLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableLiveEvent_observeNoStickyNoLoss_testNestedCallSetValue",
+            methodName = "test_LiveEvent_observeNoStickyNoLoss_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)

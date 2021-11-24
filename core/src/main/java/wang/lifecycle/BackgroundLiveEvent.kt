@@ -40,9 +40,10 @@ import java.util.*
 open class BackgroundLiveEvent<T> {
 
     companion object {
+        internal const val THREAD_NAME_DEFAULT_SCHEDULER = "default-dispatcher"
         private const val START_VERSION = InternalSupportedLiveData.START_VERSION
         private val NOT_SET = InternalSupportedLiveData.NOT_SET
-        private val sDefaultScheduler = InternalDispatcher("default-dispatcher")
+        private val sDefaultScheduler = InternalDispatcher(THREAD_NAME_DEFAULT_SCHEDULER)    // like main thread, it is the only.
         private val sBackgroundLifecycleBridge = BackgroundLifecycleBridge(sDefaultScheduler)
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
             get() = sBackgroundLifecycleBridge.getBackgroundLifecycle(this) ?: throw RuntimeException("UnKnow!")
@@ -807,7 +808,8 @@ open class BackgroundLiveEvent<T> {
  */
 interface EventDispatcher {
     companion object {
-        val BACKGROUND : EventDispatcher = InternalDispatcher("background-event-dispatcher")
+        internal const val THREAD_NAME_BACKGROUND = "background-event-dispatcher"
+        val BACKGROUND : EventDispatcher = InternalDispatcher(THREAD_NAME_BACKGROUND)
         val ASYNC : EventDispatcher = InternalAsyncDispatcher()
         val MAIN : EventDispatcher = InternalMainDispatcher()
     }

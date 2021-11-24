@@ -1,21 +1,26 @@
 package wang.lifecycle.test
 
+import android.os.Looper
 import androidx.lifecycle.Observer
 import wang.lifecycle.MutableBackgroundLiveEvent
 import wang.lifecycle.test.base.BaseTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
+import wang.lifecycle.BackgroundLiveEvent
+import wang.lifecycle.BackgroundObserver
+import wang.lifecycle.EventDispatcher
+import kotlin.test.assertEquals
 
 @RunWith(AndroidJUnit4::class)
 class BackgroundLiveEventTest : BaseTest() {
 
     @Test
-    fun MutableBackgroundLiveEvent_observe_testSetValueB2F() {
+    fun test_BackgroundLiveEvent_observe_byCallSetValueB2F() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observe_testSetValueB2F",
+            methodName = "test_BackgroundLiveEvent_observe_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -36,11 +41,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoSticky_testSetValueB2F() {
+    fun test_BackgroundLiveEvent_observeNoSticky_byCallSetValueB2F() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoSticky_testSetValueB2F",
+            methodName = "test_BackgroundLiveEvent_observeNoSticky_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -62,11 +67,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoLoss_testSetValueB2F() {
+    fun test_BackgroundLiveEvent_observeNoLoss_byCallSetValueB2F() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoLoss_testSetValueB2F",
+            methodName = "test_BackgroundLiveEvent_observeNoLoss_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -87,11 +92,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoStickyNoLoss_testSetValueB2F() {
+    fun test_BackgroundLiveEvent_observeNoStickyNoLoss_byCallSetValueB2F() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoStickyNoLoss_testSetValueB2F",
+            methodName = "test_BackgroundLiveEvent_observeNoStickyNoLoss_byCallSetValueB2F",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后activity切到后台依次调用setValue(A)、setValue(B)，切回到前台后调用setValue(C)
@@ -112,11 +117,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observe_testPostValue() {
+    fun test_BackgroundLiveEvent_observe_byCallPostValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observe_testPostValue",
+            methodName = "test_BackgroundLiveEvent_observe_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -134,11 +139,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoSticky_testPostValue() {
+    fun test_BackgroundLiveEvent_observeNoSticky_byCallPostValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoSticky_testPostValue",
+            methodName = "test_BackgroundLiveEvent_observeNoSticky_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -156,11 +161,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoLoss_testPostValue() {
+    fun test_BackgroundLiveEvent_observeNoLoss_byCallPostValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoLoss_testPostValue",
+            methodName = "test_BackgroundLiveEvent_observeNoLoss_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -177,11 +182,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoStickyNoLoss_testPostValue() {
+    fun test_BackgroundLiveEvent_observeNoStickyNoLoss_byCallPostValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoStickyNoLoss_testPostValue",
+            methodName = "test_BackgroundLiveEvent_observeNoStickyNoLoss_byCallPostValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}，activity启动后调用observe()，然后依次调用postValue(A)、postValue(B)，postValue(C)
@@ -198,11 +203,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observe_testNestedCallSetValue() {
+    fun test_BackgroundLiveEvent_observe_byNestedCallSetValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observe_testNestedCallSetValue",
+            methodName = "test_BackgroundLiveEvent_observe_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -224,11 +229,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoSticky_testNestedCallSetValue() {
+    fun test_BackgroundLiveEvent_observeNoSticky_byNestedCallSetValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoSticky_testNestedCallSetValue",
+            methodName = "test_BackgroundLiveEvent_observeNoSticky_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -251,11 +256,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoLoss_testNestedCallSetValue() {
+    fun test_BackgroundLiveEvent_observeNoLoss_byNestedCallSetValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoLoss_testNestedCallSetValue",
+            methodName = "test_BackgroundLiveEvent_observeNoLoss_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -277,11 +282,11 @@ class BackgroundLiveEventTest : BaseTest() {
     }
 
     @Test
-    fun MutableBackgroundLiveEvent_observeNoStickyNoLoss_testNestedCallSetValue() {
+    fun test_BackgroundLiveEvent_observeNoStickyNoLoss_byNestedCallSetValue() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         newObserveTestRunner(
-            methodName = "MutableBackgroundLiveEvent_observeNoStickyNoLoss_testNestedCallSetValue",
+            methodName = "test_BackgroundLiveEvent_observeNoStickyNoLoss_byNestedCallSetValue",
             desc =
             """
                 行为：liveEvent包含初始事件${EVENT_INIT}1，activity启动后依次调用observe(Observer1)，observe(Observer2)，然后依次setValue(A)、setValue(B)，setValue(C)，其中在Observer1的onChanged接收到A事件后调用setValue(Nested)
@@ -300,6 +305,44 @@ class BackgroundLiveEventTest : BaseTest() {
                 liveEvent.setValue("C")
             }
             .assertInTurnObserved("A", "Nested", "B", "C")
+    }
+
+
+    @Test
+    fun test_BackgroundLiveEvent_observeSpecifiedThread_byUseBackgroundObserver() {
+        val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
+
+        scenario.onActivity {
+            liveEvent.observe(it, Observer {
+                assertEquals(
+                    expected = BackgroundLiveEvent.THREAD_NAME_DEFAULT_SCHEDULER,
+                    actual = Thread.currentThread().name,
+                    message = "使用Observer类型时线程就是BackgroundLiveEvent内置负责调度事件的唯一的子线程。"
+                )
+            })
+
+            liveEvent.observe(it, object : BackgroundObserver<String>(
+                EventDispatcher.MAIN){
+                override fun onChanged(t: String?) {
+                    assertEquals(
+                        Looper.getMainLooper().thread,
+                        Thread.currentThread(),
+                        "应当是主线程"
+                    )
+                }
+            })
+
+            liveEvent.observe(it, object : BackgroundObserver<String>(
+                EventDispatcher.BACKGROUND){
+                override fun onChanged(t: String?) {
+                    assertEquals(
+                        expected = EventDispatcher.THREAD_NAME_BACKGROUND,
+                        actual = Thread.currentThread().name,
+                        message = "应当是EventDispatcher.BACKGROUND指定的线程"
+                    )
+                }
+            })
+        }
     }
 
 }
