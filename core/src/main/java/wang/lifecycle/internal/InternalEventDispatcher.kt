@@ -7,7 +7,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 internal class InternalDispatcher internal constructor(name: String) : EventDispatcher {
-    private val thread = HandlerThread(name)
+    internal val thread = HandlerThread(name)
     private val handler: Handler by lazy { Handler(thread.looper) }
 
     init {

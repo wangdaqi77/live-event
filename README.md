@@ -72,7 +72,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.wangdaqi77.live-event:core:1.5.3"
+    implementation "com.github.wangdaqi77.live-event:core:1.5.4"
     // 务必依赖官方组件
     implementation "androidx.lifecycle:lifecycle-core:2.3.1"
 }

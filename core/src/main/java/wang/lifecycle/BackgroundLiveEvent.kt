@@ -745,7 +745,7 @@ open class BackgroundLiveEvent<T> {
 
     }
 
-    private inner class AlwaysActiveObserver internal constructor(observer: Observer<in T>) : ObserverWrapper(observer) {
+    private inner class AlwaysActiveObserver constructor(observer: Observer<in T>) : ObserverWrapper(observer) {
         override fun shouldBeActive(): Boolean {
             return true
         }

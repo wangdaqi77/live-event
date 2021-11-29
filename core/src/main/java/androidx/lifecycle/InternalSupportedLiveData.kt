@@ -10,7 +10,7 @@ open class InternalSupportedLiveData<T> : LiveData<T> {
         val NOT_SET: Any = LiveData.NOT_SET
 
         fun assertMainThread(methodName: String){
-            if (!InternalMainExecutor.isMainThread) {
+            if (!InternalMainExecutor.onMainThread) {
                 throw IllegalStateException(
                     "Cannot invoke " + methodName + " on a background"
                             + " thread"

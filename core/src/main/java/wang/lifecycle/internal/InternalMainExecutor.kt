@@ -6,9 +6,11 @@ import java.util.concurrent.Executor
 
 internal object InternalMainExecutor : Executor{
 
-    private val mMainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
+    private val mMainHandler: Handler by lazy(LazyThreadSafetyMode.NONE) {
+        Handler(Looper.getMainLooper())
+    }
 
-    val isMainThread : Boolean
+    val onMainThread : Boolean
         get() = Thread.currentThread() == Looper.getMainLooper().thread
 
     override fun execute(command: Runnable) {
