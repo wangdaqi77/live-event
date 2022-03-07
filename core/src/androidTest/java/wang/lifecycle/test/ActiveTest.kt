@@ -7,6 +7,7 @@ import wang.lifecycle.test.base.BaseTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
+import wang.lifecycle.BackgroundObserver
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -75,8 +76,10 @@ class ActiveTest : BaseTest() {
 
         scenario.onActivity {
 
-            val observer1 = Observer<String> {  }
-            val observer2 = Observer<String> {  }
+            val observer1 = BackgroundObserver<String> {
+            }
+            val observer2 = BackgroundObserver<String> {
+            }
 
             assertFalse(active)
             liveEvent.observeForever(observer1)
@@ -92,7 +95,7 @@ class ActiveTest : BaseTest() {
             Thread.sleep(100)
             assertFalse(active)
 
-            liveEvent.observe(it, Observer {  })
+            liveEvent.observe(it, BackgroundObserver { })
             Thread.sleep(100)
             assertTrue(active)
         }

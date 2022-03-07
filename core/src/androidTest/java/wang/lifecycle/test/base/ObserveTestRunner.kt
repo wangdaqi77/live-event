@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.test.core.app.ActivityScenario
+import wang.lifecycle.BackgroundObserver
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -31,13 +32,13 @@ class ObserveTestRunner<A : Activity, T>(
         )
     }
 
-    private lateinit var _onLaunchActivity: (activity: A, Observer<T>) -> Unit
+    private lateinit var _onLaunchActivity: (activity: A, BackgroundObserver<T>) -> Unit
     private lateinit var onActivityStopped: (activity: A) -> Unit
     private lateinit var onActivityResumed: (activity: A) -> Unit
     private lateinit var onActivityDestroy: (activity: A) -> Unit
     private var _onBefore: (activity: A) -> Unit = {}
 
-    fun launchActivityThen(block: (activity: A, Observer<T>) -> Unit): ObserveTestRunner<A, T> {
+    fun launchActivityThen(block: (activity: A, BackgroundObserver<T>) -> Unit): ObserveTestRunner<A, T> {
         this._onLaunchActivity = block
         return this
     }
@@ -89,9 +90,9 @@ $desc
         if (this::_onLaunchActivity.isInitialized) {
             scenario.onActivity { activity ->
                 _onBefore(activity)
-                _onLaunchActivity.invoke(activity, Observer {
-                    // println("${TAG}：${testClassName}.${testMethodName}() onChanged -> $it")
-                    recordChanged.put(it)
+                _onLaunchActivity.invoke(activity, BackgroundObserver { t ->
+                    // println("${TAG}：${testClassName}.${testMethodName}() onChanged -> $t")
+                    recordChanged.put(t)
                 })
 
             }

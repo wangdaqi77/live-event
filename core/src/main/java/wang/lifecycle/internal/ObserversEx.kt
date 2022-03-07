@@ -3,26 +3,27 @@ package wang.lifecycle.internal
 import androidx.arch.core.internal.SafeIterableMap
 import androidx.lifecycle.Observer
 
-internal inline fun<T> SafeIterableMap<Observer<in T>, *>.eachObserver(block:(Observer<in T>) -> Unit){
+internal inline fun <T, O : Observer<in T>> SafeIterableMap<O, *>.eachObserver(block:(O) -> Unit) {
     @Suppress("INACCESSIBLE_TYPE")
-    val iterator = iteratorWithAdditions() as Iterator<Map.Entry<Observer<in T>, *>>
+    val iterator = iteratorWithAdditions() as Iterator<Map.Entry<O, *>>
     while (iterator.hasNext()) {
         val observer = iterator.next().key
         block(observer)
     }
 }
 
-internal inline fun<T> SafeIterableMap<Observer<in T>, *>.eachObserverBox(block:(ObserverBox<in T>) -> Unit) {
-    eachObserver{ value->
-        var observer = value
-        while (observer is ObserverBox) {
-            block(observer)
-            observer = observer.observer
+internal inline fun <T, O : Observer<in T>> SafeIterableMap<O, *>.eachObserverBox(block:(ObserverBox<in T>) -> Unit) {
+    eachObserver{ key : O ->
+        var observer = key
+        @Suppress("UNCHECKED_CAST")
+        while (observer is ObserverBox<*>) {
+            block(observer as ObserverBox<in T>)
+            observer = observer.observer as O
         }
     }
 }
 
-internal inline fun<T> SafeIterableMap<Observer<in T>, *>.findObserverBox(predicate: (ObserverBox<in T>) -> Boolean): ObserverBox<in T>? {
+internal inline fun <T, O : Observer<in T>> SafeIterableMap<O, *>.findObserverBox(predicate: (ObserverBox<in T>) -> Boolean): ObserverBox<in T>? {
     eachObserverBox{ observerBox->
         if (predicate(observerBox)) return observerBox
     }
@@ -32,7 +33,7 @@ internal inline fun<T> SafeIterableMap<Observer<in T>, *>.findObserverBox(predic
 /**
  * @return final observer of observe.
  */
-internal fun<T> SafeIterableMap<Observer<in T>, *>.detachObserverBoxWith(observer: Observer<in T>, onDetach:(ObserverBox<in T>)->Unit): Observer<in T> {
+internal fun <T, O : Observer<in T>> SafeIterableMap<O, *>.detachObserverBoxWith(observer: O, onDetach:(ObserverBox<in T>)->Unit): O {
     var currentObserver: Observer<in T> = observer
     var currentObserverBox: ObserverBox<in T>?
     do {
@@ -43,5 +44,6 @@ internal fun<T> SafeIterableMap<Observer<in T>, *>.detachObserverBoxWith(observe
             }
     }while (currentObserverBox != null)
 
-    return currentObserver
+    @Suppress("UNCHECKED_CAST")
+    return currentObserver as O
 }

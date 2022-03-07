@@ -38,35 +38,27 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         }
     }
 
-    private val observer =  Observer<String>{ t ->
-        log("onChanged 默认 - thread:${Thread.currentThread().name}", t)
+    private val observer = BackgroundObserver<String> { t->
+            log("onChanged 默认 - thread:${Thread.currentThread().name}", t)
     }
 
-    private val observera =  object:
-        BackgroundObserver<String>(EventDispatcher.MAIN){
-        override fun onChanged(t: String) {
+    private val observera =
+        BackgroundObserver<String>(EventDispatcher.MAIN) { t ->
             log("onChanged EventDispatcher.MAIN - thread:${Thread.currentThread().name}", t)
         }
-    }
 
-    private val observerb =  object:
-        BackgroundObserver<String>(EventDispatcher.BACKGROUND){
-        override fun onChanged(t: String) {
+    private val observerb =
+        BackgroundObserver<String>(EventDispatcher.BACKGROUND) { t ->
             log("onChanged EventDispatcher.BACKGROUND - thread:${Thread.currentThread().name}", t)
         }
-    }
 
-    private val observerc =  object:
-        BackgroundObserver<String>(EventDispatcher.ASYNC){
-        override fun onChanged(t: String) {
+    private val observerc =
+        BackgroundObserver<String>(EventDispatcher.ASYNC) { t ->
             log("onChanged EventDispatcher.ASYNC - thread:${Thread.currentThread().name}", t)
         }
-    }
 
-    private val observerd = object : BackgroundObserver<String>(customEventDispatcher){
-        override fun onChanged(t: String) {
+    private val observerd = BackgroundObserver<String>(customEventDispatcher) { t ->
             log("onChanged customEventDispatcher - thread:${Thread.currentThread().name}", t)
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -153,17 +145,17 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
         }
 
         observe.setOnClickListener {
-            log("添加观察器", "observe - 默认 - 默全局统一的子线程接收，不建议做耗时操作")
-            backgroundLiveEvent.observe(this, observer)
+            log("添加观察器", "observe - 默认 - BackgroundLiveEvent内置的事件调度器所属的唯一子线程接收，不建议做耗时操作")
+            backgroundLiveEvent.observeNoLoss(this, observer)
         }
         observe1.setOnClickListener {
-            log("移除观察器", "observe - 默认 - 默全局统一的子线程接收，不建议做耗时操作")
+            log("移除观察器", "observe - 默认 - BackgroundLiveEvent内置的事件调度器所属的唯一子线程接收，不建议做耗时操作")
             backgroundLiveEvent.removeObserver(observer)
         }
 
         observea.setOnClickListener {
             log("添加观察器", "observe - EventDispatcher.MAIN - 主线程接收，不建议做耗时操作")
-            backgroundLiveEvent.observe(this, observera)
+            backgroundLiveEvent.observeNoLoss(this, observera)
         }
         observea1.setOnClickListener {
             log("移除观察器", "observe - EventDispatcher.MAIN - 主线程接收，不建议做耗时操作")
@@ -172,7 +164,7 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
         observeb.setOnClickListener {
             log("添加观察器", "observe - EventDispatcher.BACKGROUND - 后台线程接收，不建议做耗时操作")
-            backgroundLiveEvent.observe(this, observerb)
+            backgroundLiveEvent.observeNoLoss(this, observerb)
         }
         observeb1.setOnClickListener {
             log("移除观察器", "observe - EventDispatcher.BACKGROUND - 后台线程接收，不建议做耗时操作")
@@ -181,7 +173,7 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
         observec.setOnClickListener {
             log("添加观察器", "observe - EventDispatcher.ASYNC - 后台线程接收，可做耗时操作")
-            backgroundLiveEvent.observe(this, observerc)
+            backgroundLiveEvent.observeNoLoss(this, observerc)
         }
         observec1.setOnClickListener {
             log("移除观察器", "observe - EventDispatcher.ASYNC - 后台线程接收，可做耗时操作")
@@ -190,7 +182,7 @@ class SpecifiedThreadToObserveDemoActivity : AppCompatActivity() {
 
         observed.setOnClickListener {
             log("添加观察器", "observe - customEventDispatcher - 单独指定自定义线程接收")
-            backgroundLiveEvent.observe(this, observerd)
+            backgroundLiveEvent.observeNoLoss(this, observerd)
         }
         observed1.setOnClickListener {
             log("移除观察器", "observe - customEventDispatcher - 单独指定自定义线程接收")

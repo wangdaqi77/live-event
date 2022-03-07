@@ -1,13 +1,11 @@
 package wang.lifecycle.test
 
 import android.os.Looper
-import androidx.lifecycle.Observer
 import wang.lifecycle.MutableBackgroundLiveEvent
 import wang.lifecycle.test.base.BaseTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
-import wang.lifecycle.BackgroundLiveEvent
 import wang.lifecycle.BackgroundObserver
 import wang.lifecycle.EventDispatcher
 import kotlin.test.assertEquals
@@ -215,8 +213,8 @@ class BackgroundLiveEventTest : BaseTest() {
             """.trimIndent()
         )
             .launchActivityThen { activity, observer ->
-                liveEvent.observe(activity, Observer {
-                    if (it == "A") {
+                liveEvent.observe(activity, BackgroundObserver { t ->
+                    if (t == "A") {
                         liveEvent.setValue("Nested")
                     }
                 })
@@ -241,8 +239,8 @@ class BackgroundLiveEventTest : BaseTest() {
             """.trimIndent()
         )
             .launchActivityThen { activity, observer ->
-                liveEvent.observeNoSticky(activity, Observer {
-                    if (it == "A") {
+                liveEvent.observeNoSticky(activity, BackgroundObserver { t ->
+                    if (t == "A") {
                         liveEvent.setValue("Nested")
                     }
                 })
@@ -268,8 +266,8 @@ class BackgroundLiveEventTest : BaseTest() {
             """.trimIndent()
         )
             .launchActivityThen { activity, observer ->
-                liveEvent.observeNoLoss(activity, Observer {
-                    if (it == "A") {
+                liveEvent.observeNoLoss(activity, BackgroundObserver { t ->
+                    if (t == "A") {
                         liveEvent.setValue("Nested")
                     }
                 })
@@ -294,8 +292,8 @@ class BackgroundLiveEventTest : BaseTest() {
             """.trimIndent()
         )
             .launchActivityThen { activity, observer ->
-                liveEvent.observeNoStickyNoLoss(activity, Observer {
-                    if (it == "A") {
+                liveEvent.observeNoStickyNoLoss(activity, BackgroundObserver { t ->
+                    if (t == "A") {
                         liveEvent.setValue("Nested")
                     }
                 })
@@ -313,34 +311,28 @@ class BackgroundLiveEventTest : BaseTest() {
         val liveEvent = MutableBackgroundLiveEvent(EVENT_INIT)
 
         scenario.onActivity {
-            liveEvent.observe(it, Observer {
+            liveEvent.observe(it, BackgroundObserver { t ->
                 assertEquals(
-                    expected = BackgroundLiveEvent.THREAD_NAME_DEFAULT_SCHEDULER,
+                    expected = EventDispatcher.THREAD_NAME_DEFAULT_SCHEDULER,
                     actual = Thread.currentThread().name,
                     message = "使用Observer类型时线程就是BackgroundLiveEvent内置负责调度事件的唯一的子线程。"
                 )
             })
 
-            liveEvent.observe(it, object : BackgroundObserver<String>(
-                EventDispatcher.MAIN){
-                override fun onChanged(t: String?) {
-                    assertEquals(
-                        Looper.getMainLooper().thread,
-                        Thread.currentThread(),
-                        "应当是主线程"
-                    )
-                }
+            liveEvent.observe(it, BackgroundObserver(EventDispatcher.MAIN) {
+                assertEquals(
+                    Looper.getMainLooper().thread,
+                    Thread.currentThread(),
+                    "应当是主线程"
+                )
             })
 
-            liveEvent.observe(it, object : BackgroundObserver<String>(
-                EventDispatcher.BACKGROUND){
-                override fun onChanged(t: String?) {
-                    assertEquals(
-                        expected = EventDispatcher.THREAD_NAME_BACKGROUND,
-                        actual = Thread.currentThread().name,
-                        message = "应当是EventDispatcher.BACKGROUND指定的线程"
-                    )
-                }
+            liveEvent.observe(it, BackgroundObserver(EventDispatcher.BACKGROUND) {
+                assertEquals(
+                    expected = EventDispatcher.THREAD_NAME_BACKGROUND,
+                    actual = Thread.currentThread().name,
+                    message = "应当是EventDispatcher.BACKGROUND指定的线程"
+                )
             })
         }
     }

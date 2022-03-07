@@ -52,7 +52,7 @@ internal class InternalAsyncDispatcher internal constructor() : EventDispatcher 
     }
 
     private val executor by lazy {
-        Executors.newCachedThreadPool{
+        Executors.newCachedThreadPool {
             Thread(group, it, namePrefix + threadNumber.getAndIncrement(), 0L)
                 .apply {
                     if (isDaemon) isDaemon = false

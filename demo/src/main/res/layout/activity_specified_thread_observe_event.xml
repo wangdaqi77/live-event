@@ -26,7 +26,7 @@
                 android:gravity="center"
                 android:minHeight="15dp"
 
-                android:text="observe - 默认\n默全局统一的子线程接收，不建议做耗时操作"
+                android:text="observe - 默认\nBackgroundLiveEvent内置的事件调度器所属的唯一子线程接收，不建议做耗时操作"
                 android:textColor="@android:color/black"
                 android:textSize="10sp" />
 

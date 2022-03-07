@@ -6,9 +6,9 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.Observer
 import wang.lifecycle.MutableBackgroundLiveEvent
 import kotlinx.android.synthetic.main.activity_background_live_event.*
+import wang.lifecycle.BackgroundObserver
 import java.text.SimpleDateFormat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -169,15 +169,31 @@ class BackgroundLiveEventDemoActivity : AppCompatActivity() {
         backgroundLiveEvent.postValue(value)
     }
 
-    private val observers = HashMap<String, Observer<String>>().apply {
-        this["observe"] = Observer { log("observe onChanged", it) }
-        this["observeForever"] = Observer { log("observeForever onChanged", it) }
-        this["observeNoSticky"] = Observer { log("observeNoSticky onChanged", it) }
-        this["observeForeverNoSticky"] = Observer { log("observeForeverNoSticky onChanged", it) }
-        this["observeNoLoss"] = Observer { log("observeNoLoss onChanged", it) }
-        this["observeForeverNoLoss"] = Observer { log("observeForeverNoLoss onChanged", it) }
-        this["observeNoStickyNoLoss"] = Observer { log("observeNoStickyNoLoss onChanged", it) }
-        this["observeForeverNoStickyNoLoss"] = Observer { log("observeForeverNoStickyNoLoss onChanged", it) }
+    private val observers = HashMap<String, BackgroundObserver<String>>().apply {
+        this["observe"] = BackgroundObserver {
+            log("observe onChanged", it)
+        }
+        this["observeForever"] = BackgroundObserver {
+            log("observeForever onChanged", it)
+        }
+        this["observeNoSticky"] = BackgroundObserver {
+            log("observeNoSticky onChanged", it)
+        }
+        this["observeForeverNoSticky"] = BackgroundObserver {
+            log("observeForeverNoSticky onChanged", it)
+        }
+        this["observeNoLoss"] = BackgroundObserver {
+            log("observeNoLoss onChanged", it)
+        }
+        this["observeForeverNoLoss"] = BackgroundObserver {
+            log("observeForeverNoLoss onChanged", it)
+        }
+        this["observeNoStickyNoLoss"] = BackgroundObserver {
+                log("observeNoStickyNoLoss onChanged", it)
+        }
+        this["observeForeverNoStickyNoLoss"] = BackgroundObserver {
+            log("observeForeverNoStickyNoLoss onChanged", it)
+        }
     }
 
     private fun observeForMethod(name:String){

@@ -24,11 +24,9 @@ import java.util.*
  * }
  *
  * // 2. use BackgroundObserver to observe
- * backgroundLiveEvent.observe(owner, object : BackgroundObserver<Int>(customEventDispatcher){
- *      override fun onChanged(event: T) {
- *          // receive event in specified thread of the customEventDispatcher.
- *      }
- * }
+ * backgroundLiveEvent.observe(owner, BackgroundObserver<Int>(customEventDispatcher) {
+ *      // receive event in specified thread of the customEventDispatcher.
+ * })
  * ```
  *
  * Note custom dispatcher of BackgroundObserver takes precedence over global dispatcher.
@@ -40,10 +38,9 @@ import java.util.*
 open class BackgroundLiveEvent<T> {
 
     companion object {
-        internal const val THREAD_NAME_DEFAULT_SCHEDULER = "default-dispatcher"
-        private const val START_VERSION = InternalSupportedLiveData.START_VERSION
+        internal const val START_VERSION = InternalSupportedLiveData.START_VERSION
         private val NOT_SET = InternalSupportedLiveData.NOT_SET
-        private val sDefaultScheduler = InternalDispatcher(THREAD_NAME_DEFAULT_SCHEDULER)    // like main thread, it is the only.
+        private val sDefaultScheduler = EventDispatcher.DEFAULT as InternalDispatcher
         private val sBackgroundLifecycleBridge = BackgroundLifecycleBridge(sDefaultScheduler)
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
             get() = sBackgroundLifecycleBridge.getBackgroundLifecycle(this) ?: throw RuntimeException("UnKnow!")
@@ -153,7 +150,7 @@ open class BackgroundLiveEvent<T> {
     }
 
     private fun onChangedForObserver(observer: Observer<in T>, value: T) {
-        if (observer is BackgroundObserver) {
+        if (observer is BackgroundObserver<in T>) {
             val dispatcher = observer.dispatcher
             dispatcher.dispatch(object : InternalRunnable {
                 override fun run() {
@@ -161,14 +158,12 @@ open class BackgroundLiveEvent<T> {
                 }
             })
         } else {
-            sDefaultScheduler.dispatch {
-                observer.onChanged(value)
-            }
+            observer.onChanged(value)
         }
     }
 
     private fun onLifecycleOwnerDestroyForObserverBox(observer: Observer<in T>) {
-        removeObserver(observer)
+        removeObserverInternal(observer)
     }
 
     private fun detachNoStickyObserver(observer: NoStickyObserverBox<T>) {
@@ -249,11 +244,11 @@ open class BackgroundLiveEvent<T> {
      * @param owner    The LifecycleOwner which controls the observer
      * @param observer The observer that will receive the events
      */
-    open fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        observeInner(owner, observer)
+    open fun observe(owner: LifecycleOwner, observer: BackgroundObserver<in T>) {
+        observeInternal(owner, observer)
     }
 
-    private fun observeInner(
+    private fun observeInternal(
         owner: LifecycleOwner, observer: Observer<in T>,
         onAfter: ((LifecycleBoundObserver) -> Unit)? = null
     ) {
@@ -298,11 +293,11 @@ open class BackgroundLiveEvent<T> {
      *
      * @param observer The observer that will receive the events
      */
-    open fun observeForever(observer: Observer<in T>) {
-        observeForeverInner(observer)
+    open fun observeForever(observer: BackgroundObserver<in T>) {
+        observeForeverInternal(observer)
     }
 
-    private fun observeForeverInner(observer: Observer<in T>) {
+    private fun observeForeverInternal(observer: Observer<in T>) {
         sDefaultScheduler.dispatch {
             noLossObserverCount++
             val wrapper = AlwaysActiveObserver(observer)
@@ -313,7 +308,6 @@ open class BackgroundLiveEvent<T> {
             }
             wrapper.activeStateChanged(true)
         }
-
     }
 
     /**
@@ -321,7 +315,7 @@ open class BackgroundLiveEvent<T> {
      *
      * @see observe
      */
-    open fun observeNoSticky(owner: LifecycleOwner, observer: Observer<in T>) {
+    open fun observeNoSticky(owner: LifecycleOwner, observer: BackgroundObserver<in T>) {
 
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
@@ -352,18 +346,18 @@ open class BackgroundLiveEvent<T> {
                 val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, false, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox, isBackground = true)
 
                 owner.backgroundLifecycle.addObserver(noStickyObserver)
-                observeInner(owner, noStickyObserver)
+                observeInternal(owner, noStickyObserver)
                 return@dispatch
             }
 
             if (owner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, true, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox, isBackground = true)
                 owner.backgroundLifecycle.addObserver(noStickyObserver)
-                observeInner(owner, noStickyObserver)
+                observeInternal(owner, noStickyObserver)
             }else{
                 val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, false, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox, isBackground = true)
                 owner.backgroundLifecycle.addObserver(noStickyObserver)
-                observeInner(owner, noStickyObserver) {
+                observeInternal(owner, noStickyObserver) {
                     it.mLastVersion = mVersion
                 }
             }
@@ -378,7 +372,7 @@ open class BackgroundLiveEvent<T> {
      *
      * @see observeForever
      */
-    open fun observeForeverNoSticky(observer: Observer<in T>) {
+    open fun observeForeverNoSticky(observer: BackgroundObserver<in T>) {
 
         sDefaultScheduler.dispatch {
             mObservers.eachObserverBox {
@@ -394,12 +388,12 @@ open class BackgroundLiveEvent<T> {
             }
             if (mVersion == START_VERSION) {
                 val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, false, ::onChangedForObserver)
-                observeForeverInner(noStickyObserver)
+                observeForeverInternal(noStickyObserver)
                 return@dispatch
             }
 
             val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, true, ::onChangedForObserver)
-            observeForeverInner(noStickyObserver)
+            observeForeverInternal(noStickyObserver)
         }
 
     }
@@ -416,7 +410,7 @@ open class BackgroundLiveEvent<T> {
      *
      * @see observe
      */
-    open fun observeNoLoss(owner: LifecycleOwner, observer: Observer<in T>) {
+    open fun observeNoLoss(owner: LifecycleOwner, observer: BackgroundObserver<in T>) {
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
             return
@@ -444,7 +438,7 @@ open class BackgroundLiveEvent<T> {
 
             val noLossValueObserver = AlwaysActiveToLifecycleBoundNoLossObserverBox(owner, observer, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox, isBackground = true)
             owner.backgroundLifecycle.addObserver(noLossValueObserver)
-            observeForeverInner(noLossValueObserver)
+            observeForeverInternal(noLossValueObserver)
         }
 
     }
@@ -456,7 +450,7 @@ open class BackgroundLiveEvent<T> {
      * You should manually call [removeObserver] to stop observing this [BackgroundLiveEvent].
      *
      */
-    open fun observeForeverNoLoss(observer: Observer<in T>) {
+    open fun observeForeverNoLoss(observer: BackgroundObserver<in T>) {
         sDefaultScheduler.dispatch {
             mObservers.eachObserverBox {
                 if (observer === it.observer) {
@@ -471,7 +465,7 @@ open class BackgroundLiveEvent<T> {
             }
 
             val noLossValueObserver = AlwaysActiveNoLossObserverBox(observer, ::onChangedForObserver)
-            observeForeverInner(noLossValueObserver)
+            observeForeverInternal(noLossValueObserver)
         }
     }
 
@@ -481,7 +475,7 @@ open class BackgroundLiveEvent<T> {
      * @see observeNoLoss
      * @see observeNoSticky
      */
-    open fun observeNoStickyNoLoss(owner: LifecycleOwner, observer: Observer<in T>) {
+    open fun observeNoStickyNoLoss(owner: LifecycleOwner, observer: BackgroundObserver<in T>) {
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
             return
@@ -525,7 +519,7 @@ open class BackgroundLiveEvent<T> {
             val noLossValueObserver =
                 AlwaysActiveToLifecycleBoundNoLossObserverBox(owner, noStickyObserver, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox, isBackground = true)
             owner.backgroundLifecycle.addObserver(noLossValueObserver)
-            observeForeverInner(noLossValueObserver)
+            observeForeverInternal(noLossValueObserver)
         }
     }
 
@@ -537,7 +531,7 @@ open class BackgroundLiveEvent<T> {
      * @see observeForeverNoSticky
      * @see observeForeverNoLoss
      */
-    open fun observeForeverNoStickyNoLoss(observer: Observer<in T>) {
+    open fun observeForeverNoStickyNoLoss(observer: BackgroundObserver<in T>) {
         sDefaultScheduler.dispatch {
             mObservers.eachObserverBox {
 
@@ -566,7 +560,7 @@ open class BackgroundLiveEvent<T> {
             val shouldIgnoreSticky = mVersion != START_VERSION
             val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, shouldIgnoreSticky, ::onChangedForObserver)
             val noLossValueObserver = AlwaysActiveNoLossObserverBox(noStickyObserver, ::onChangedForObserver)
-            observeForeverInner(noLossValueObserver)
+            observeForeverInternal(noLossValueObserver)
 
         }
 
@@ -579,15 +573,15 @@ open class BackgroundLiveEvent<T> {
      */
     open fun removeObservers(owner: LifecycleOwner) {
         sDefaultScheduler.dispatch {
-            mObservers.eachObserverBox {observerBox ->
+            mObservers.eachObserverBox { observerBox ->
                 if (observerBox.isAttachedTo(owner) && observerBox.observer !is ObserverBox) {
-                    removeObserver(observerBox.observer)
+                    removeObserverInternal(observerBox.observer)
                 }
             }
 
             for ((key, value) in mObservers) {
                 if (value.isAttachedTo(owner)) {
-                    removeObserver(key)
+                    removeObserverInternal(key)
                 }
             }
         }
@@ -599,9 +593,12 @@ open class BackgroundLiveEvent<T> {
      *
      * @param observer The Observer to receive events.
      */
-    open fun removeObserver(observer: Observer<in T>) {
+    open fun removeObserver(observer: BackgroundObserver<in T>) {
+        removeObserverInternal(observer)
+    }
+    private fun removeObserverInternal(observer: Observer<in T>) {
         sDefaultScheduler.dispatch {
-            val finalObserver = mObservers.detachObserverBoxWith(observer){ detachObserverBox ->
+            val finalObserver = mObservers.detachObserverBoxWith(observer) { detachObserverBox ->
                 @Suppress("UNCHECKED_CAST")
                 when (detachObserverBox) {
                     is NoStickyObserverBox -> {
@@ -642,8 +639,8 @@ open class BackgroundLiveEvent<T> {
      * Posts a task to background thread to set the given value. So if you have a following code
      * executed in same thread:
      *
-     * backgroundLiveEvent.postValue("a");
-     * backgroundLiveEvent.postValue("b");
+     * backgroundLiveEvent.postValue("a")
+     * backgroundLiveEvent.postValue("b")
      *
      * The value "b" would be set at first and later the background thread would override it with
      * the value "a".
@@ -688,6 +685,8 @@ open class BackgroundLiveEvent<T> {
         }
     }
 
+    open fun getVersion() = mVersion
+
     /**
      * Returns the current value.
      * Note that calling this method does not guarantee that the latest value set will be received.
@@ -712,7 +711,7 @@ open class BackgroundLiveEvent<T> {
 
     protected open fun onInactive() { }
 
-    private abstract inner class ObserverWrapper internal constructor(val mObserver: Observer<in T>) {
+    private abstract inner class ObserverWrapper(val mObserver: Observer<in T>) {
         var mActive = false
         var mLastVersion = START_VERSION
 
@@ -763,7 +762,7 @@ open class BackgroundLiveEvent<T> {
             sDefaultScheduler.dispatch {
                 var currentState = mOwner.lifecycle.currentState
                 if (currentState == Lifecycle.State.DESTROYED) {
-                    removeObserver(mObserver)
+                    removeObserverInternal(mObserver)
                     return@dispatch
                 }
                 var prevState: Lifecycle.State? = null
@@ -808,7 +807,9 @@ open class BackgroundLiveEvent<T> {
  */
 interface EventDispatcher {
     companion object {
-        internal const val THREAD_NAME_BACKGROUND = "background-event-dispatcher"
+        internal const val THREAD_NAME_DEFAULT_SCHEDULER = "event-dispatcher-default"
+        internal const val THREAD_NAME_BACKGROUND = "event-dispatcher-background"
+        val DEFAULT : EventDispatcher = InternalDispatcher(THREAD_NAME_DEFAULT_SCHEDULER)   // like main thread, it is the only.
         val BACKGROUND : EventDispatcher = InternalDispatcher(THREAD_NAME_BACKGROUND)
         val ASYNC : EventDispatcher = InternalAsyncDispatcher()
         val MAIN : EventDispatcher = InternalMainDispatcher()
@@ -829,4 +830,6 @@ interface EventDispatcher {
  * @see BackgroundLiveEvent BackgroundLiveEvent - for a usage description.
  * @see EventDispatcher     EventDispatcher - has default implementation.
  */
-abstract class BackgroundObserver<T> (internal val dispatcher: EventDispatcher) : Observer<T>
+open class BackgroundObserver<T> constructor(internal val dispatcher: EventDispatcher, observer: Observer<T>) : Observer<T> by observer
+
+fun <T> BackgroundObserver(dispatcher: EventDispatcher = EventDispatcher.DEFAULT, onChanged: (t: T) -> Unit) = BackgroundObserver<T>(dispatcher, Observer { t -> onChanged(t) })

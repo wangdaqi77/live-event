@@ -36,11 +36,11 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         setValue(newValue as T)
     }
 
-    private fun observeInner(owner: LifecycleOwner, observer: Observer<in T>) {
+    private fun observeInternal(owner: LifecycleOwner, observer: Observer<in T>) {
         super.observe(owner, observer)
     }
 
-    private fun observeForeverInner(observer: Observer<in T>) {
+    private fun observeForeverInternal(observer: Observer<in T>) {
         if (observer is NoLossObserverBox) noLossObserverCount++
         super.observeForever(observer)
     }
@@ -50,7 +50,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
     }
 
     private fun onLifecycleOwnerDestroyForObserverBox(observer: Observer<in T>) {
-        removeObserver(observer)
+        removeObserverInternal(observer)
     }
 
     private fun detachNoStickyObserver(observer: NoStickyObserverBox<T>) {
@@ -114,7 +114,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         checkObserver(observer)
-        observeInner(owner, observer)
+        observeInternal(owner, observer)
     }
 
     /**
@@ -122,7 +122,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
      */
     override fun observeForever(observer: Observer<in T>) {
         checkObserver(observer)
-        observeForeverInner(observer)
+        observeForeverInternal(observer)
     }
 
     /**
@@ -154,18 +154,18 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         if(version == START_VERSION) {
             val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, false, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox)
             owner.lifecycle.addObserver(noStickyObserver)
-            observeInner(owner, noStickyObserver)
+            observeInternal(owner, noStickyObserver)
             return
         }
 
         if (owner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, true, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox)
             owner.lifecycle.addObserver(noStickyObserver)
-            observeInner(owner, noStickyObserver)
+            observeInternal(owner, noStickyObserver)
         }else{
             val noStickyObserver = LifecycleBoundNoStickyObserverBox(owner, observer, false, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox)
             owner.lifecycle.addObserver(noStickyObserver)
-            observeInner(owner, noStickyObserver)
+            observeInternal(owner, noStickyObserver)
             syncVersion(noStickyObserver)
         }
     }
@@ -196,13 +196,13 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
 
         if(version == START_VERSION) {
             val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, false, ::onChangedForObserver)
-            observeForeverInner(noStickyObserver)
+            observeForeverInternal(noStickyObserver)
             return
         }
 
         val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, true, ::onChangedForObserver)
 
-        observeForeverInner(noStickyObserver)
+        observeForeverInternal(noStickyObserver)
     }
 
     /**
@@ -242,7 +242,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
 
         owner.lifecycle.addObserver(noLossValueObserver)
 
-        observeForeverInner(noLossValueObserver)
+        observeForeverInternal(noLossValueObserver)
     }
 
     /**
@@ -270,7 +270,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
 
         val noLossValueObserver = AlwaysActiveNoLossObserverBox(observer, ::onChangedForObserver)
 
-        observeForeverInner(noLossValueObserver)
+        observeForeverInternal(noLossValueObserver)
     }
 
     /**
@@ -317,12 +317,12 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         val noLossValueObserver = AlwaysActiveToLifecycleBoundNoLossObserverBox(owner, noStickyObserver, ::onChangedForObserver, ::onLifecycleOwnerDestroyForObserverBox)
         owner.lifecycle.addObserver(noLossValueObserver)
 
-        observeForeverInner(noLossValueObserver)
+        observeForeverInternal(noLossValueObserver)
     }
 
     /**
      * Using this function means no loss and no sticky for the [observer].
-     * 
+     *
      * You should manually call [removeObserver] to stop observing this [LiveEvent].
      *
      * @see observeForeverNoSticky
@@ -360,13 +360,16 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         val shouldIgnoreSticky = version != START_VERSION
         val noStickyObserver = AlwaysActiveNoStickyObserverBox(observer, shouldIgnoreSticky, ::onChangedForObserver)
         val noLossValueObserver = AlwaysActiveNoLossObserverBox(noStickyObserver, ::onChangedForObserver)
-        observeForeverInner(noLossValueObserver)
+        observeForeverInternal(noLossValueObserver)
     }
 
     @MainThread
     override fun removeObserver(observer: Observer<in T>) {
         assertMainThread("removeObserver")
+        removeObserverInternal(observer)
+    }
 
+    private fun removeObserverInternal(observer: Observer<in T>) {
         val finalObserver = mObservers.detachObserverBoxWith(observer) { detachObserverBox ->
             @Suppress("UNCHECKED_CAST")
             when (detachObserverBox) {
@@ -388,7 +391,7 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         assertMainThread("removeObservers")
         mObservers.eachObserverBox {observerBox ->
             if (observerBox.isAttachedTo(owner) && observerBox.observer !is ObserverBox) {
-                removeObserver(observerBox.observer)
+                removeObserverInternal(observerBox.observer)
             }
         }
 
