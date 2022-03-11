@@ -6,9 +6,7 @@ import java.util.concurrent.Executor
 
 internal object InternalMainExecutor : Executor{
 
-    private val mMainHandler: Handler by lazy(LazyThreadSafetyMode.NONE) {
-        Handler(Looper.getMainLooper())
-    }
+    private val mMainHandler: Handler = Handler(Looper.getMainLooper())
 
     val onMainThread : Boolean
         get() = Thread.currentThread() == Looper.getMainLooper().thread

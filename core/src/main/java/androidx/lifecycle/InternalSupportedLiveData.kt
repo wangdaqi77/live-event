@@ -31,7 +31,7 @@ open class InternalSupportedLiveData<T> : LiveData<T> {
     internal val version : Int
         get() = super.getVersion()
 
-    internal val mObservers by lazy { InternalReflect.getObservers(this) }
+    internal val mObservers by lazy(LazyThreadSafetyMode.NONE) { InternalReflect.getObservers(this) }
 
     internal val mDispatchingValue
         get() = InternalReflect.mDispatchingValue(this)

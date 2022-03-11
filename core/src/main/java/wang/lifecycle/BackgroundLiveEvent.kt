@@ -31,7 +31,7 @@ import java.util.*
  *
  * Note custom dispatcher of BackgroundObserver takes precedence over global dispatcher.
  *
- * If you need observe event on main thread, you can use [LiveEvent].
+ * If you need observe event on main thread, you also can use [LiveEvent].
  *
  * @param T The type of data hold by this instance.
  */
@@ -40,6 +40,7 @@ open class BackgroundLiveEvent<T> {
     companion object {
         internal const val START_VERSION = InternalSupportedLiveData.START_VERSION
         private val NOT_SET = InternalSupportedLiveData.NOT_SET
+        // like main thread in LiveData or LiveEvent, it is the only.
         private val sDefaultScheduler = EventDispatcher.DEFAULT as InternalDispatcher
         private val sBackgroundLifecycleBridge = BackgroundLifecycleBridge(sDefaultScheduler)
         internal val LifecycleOwner.backgroundLifecycle : Lifecycle
@@ -809,10 +810,10 @@ interface EventDispatcher {
     companion object {
         internal const val THREAD_NAME_DEFAULT_SCHEDULER = "event-dispatcher-default"
         internal const val THREAD_NAME_BACKGROUND = "event-dispatcher-background"
-        val DEFAULT : EventDispatcher = InternalDispatcher(THREAD_NAME_DEFAULT_SCHEDULER)   // like main thread, it is the only.
-        val BACKGROUND : EventDispatcher = InternalDispatcher(THREAD_NAME_BACKGROUND)
-        val ASYNC : EventDispatcher = InternalAsyncDispatcher()
-        val MAIN : EventDispatcher = InternalMainDispatcher()
+        val DEFAULT : EventDispatcher = InternalDispatcher(THREAD_NAME_DEFAULT_SCHEDULER)
+        val BACKGROUND : EventDispatcher by lazy { InternalDispatcher(THREAD_NAME_BACKGROUND) }
+        val ASYNC : EventDispatcher by lazy { InternalAsyncDispatcher() }
+        val MAIN : EventDispatcher by lazy { InternalMainDispatcher() }
     }
 
     /**

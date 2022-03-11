@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 internal class InternalDispatcher internal constructor(name: String) : EventDispatcher {
     internal val thread = HandlerThread(name)
-    private val handler: Handler by lazy { Handler(thread.looper) }
+    private val handler: Handler by lazy(LazyThreadSafetyMode.NONE) { Handler(thread.looper) }
 
     init {
         thread.start()
@@ -51,7 +51,7 @@ internal class InternalAsyncDispatcher internal constructor() : EventDispatcher 
         this.namePrefix = "pool-async-event-dispatcher-thread-"
     }
 
-    private val executor by lazy {
+    private val executor =
         Executors.newCachedThreadPool {
             Thread(group, it, namePrefix + threadNumber.getAndIncrement(), 0L)
                 .apply {
@@ -59,7 +59,6 @@ internal class InternalAsyncDispatcher internal constructor() : EventDispatcher 
                     if (priority != 5) priority = 5
                 }
         }
-    }
 
     override fun dispatch(runnable: Runnable) {
         check(runnable is InternalRunnable) { "Not call dispatch!" }

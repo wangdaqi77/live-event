@@ -7,7 +7,7 @@ live-event
 
 它主要包含以下两个类：
  * `LiveEvent` - 一个在给定的生命周期内可观察的事件持有类，它继承`LiveData`，`setValue`和`observe`相关函数必须在主线程调用。
- * `BackgroundLiveEvent` - 一个在给定的生命周期内可观察的事件持有类，`setValue`和`observe`相关函数支持在任意线程调用，它默认在后台线程接收事件，也可以指定线程接收事件。
+ * `BackgroundLiveEvent` - 一个在给定的生命周期内可观察的事件持有类，`setValue`和`observe`相关函数支持在任意线程调用，它有一个后台线程在内部管理和分发事件，就像`LiveData`或者`LiveEvent`中的主线程一样，它默认在后台线程接收事件，也可以指定线程接收事件。
 
 如果[直接使用请点这里](#开始使用)，后续再来阅读文档。
 
@@ -71,7 +71,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.wangdaqi77.live-event:core:1.5.6"
+    implementation "com.github.wangdaqi77.live-event:core:1.5.7"
     // 务必依赖官方组件
     implementation "androidx.lifecycle:lifecycle-core:2.3.1"
 }
@@ -117,7 +117,7 @@ BackgroundLiveEvent可以指定线程接收事件
 val liveEvent = MutableBackgroundLiveEvent<String>(EVENT_INIT)
 
 // 2.观察
-// 2.1 使用BackgroundObserver观察时，会在BackgroundLiveEvent内置的事件调度器所属的唯一子线程接收事件。
+// 2.1 使用BackgroundObserver观察时，会在BackgroundLiveEvent内置的事件调度器所属的唯一子线程接收事件，该线程就像`LiveData`或者`LiveEvent`中的主线程一样。
 liveEvent.observe(LifecycleOwner, BackgroundObserver { event ->
    // 线程名为event-dispatcher-default
    // 不建议在此做耗时操作

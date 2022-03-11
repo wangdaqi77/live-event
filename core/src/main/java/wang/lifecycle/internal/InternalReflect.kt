@@ -17,7 +17,7 @@ internal object InternalReflect {
     private val LiveData_class : Class<*> = LiveData::class.java
     private val LifecycleRegistry_class : Class<*> = LifecycleRegistry::class.java
 
-    private val mEnforceMainThread_field : Field? by lazy {
+    private val mEnforceMainThread_field : Field? by lazy(LazyThreadSafetyMode.NONE) {
         try {
             // lifecycle-runtime-2.3.1
             // private final boolean mEnforceMainThread;
@@ -30,7 +30,7 @@ internal object InternalReflect {
         }
     }
 
-    private val mObservers_field : Field by lazy {
+    private val mObservers_field : Field by lazy(LazyThreadSafetyMode.NONE) {
         // private SafeIterableMap<Observer<? super T>, ObserverWrapper> mObservers =
         //            new SafeIterableMap<>();
         LiveData_class.getDeclaredField("mObservers").also {
@@ -38,14 +38,14 @@ internal object InternalReflect {
         }
     }
 
-    private val mDispatchingValue_field : Field by lazy {
+    private val mDispatchingValue_field : Field by lazy(LazyThreadSafetyMode.NONE) {
         // private boolean mDispatchingValue;
         LiveData_class.getDeclaredField("mDispatchingValue").also {
             mDispatchingValueFieldAccessible = it.isAccessible
         }
     }
 
-    private val considerNotify_method : Method by lazy {
+    private val considerNotify_method : Method by lazy(LazyThreadSafetyMode.NONE) {
         // private void considerNotify(ObserverWrapper observer)
         val method = LiveData_class.declaredMethods.findLast { it.name == "considerNotify"}?.also{
             considerNotifyMethodAccessible = it.isAccessible
