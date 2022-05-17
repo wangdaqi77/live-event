@@ -1,2 +1,2 @@
 apply plugin: 'java-library'
-apply from: "../publish-jitpack.gradle"
+apply from: "../publish.gradle"

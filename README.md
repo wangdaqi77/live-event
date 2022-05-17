@@ -1,15 +1,13 @@
 live-event
 ==========
 
-[![](https://jitpack.io/v/wangdaqi77/live-event.svg)](https://jitpack.io/#wangdaqi77/live-event) [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-
 一个在给定的生命周期内可观察的事件库。
 
 它主要包含以下两个类：
  * `LiveEvent` - 一个在给定的生命周期内可观察的事件持有类，它继承`LiveData`，`setValue`和`observe`相关函数必须在主线程调用。
  * `BackgroundLiveEvent` - 一个在给定的生命周期内可观察的事件持有类，`setValue`和`observe`相关函数支持在任意线程调用，它有一个后台线程在内部管理和分发事件，就像`LiveData`或者`LiveEvent`中的主线程一样，它默认在后台线程接收事件，也可以指定线程接收事件。
 
-如果[直接使用请点这里](#开始使用)，后续再来阅读文档。
+如果[直接使用请点这里][开始使用]，后续再来阅读文档。
 
 前言
 ----
@@ -71,7 +69,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.wangdaqi77.live-event:core:1.5.7"
+    implementation "com.github.wangdaqi77.live-event:lifecycle-liveevent-core:1.6.0"
     // 务必依赖官方组件
     implementation "androidx.lifecycle:lifecycle-core:2.3.1"
 }
@@ -164,3 +162,5 @@ Demo提供了丰富的示例，[下载Demo](./assets/demo-debug.apk)了解更多
 Demo主界面：
 
 ![image](./assets/demo.webp)
+
+  [开始使用]:#开始使用

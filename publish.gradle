@@ -1,0 +1,14 @@
+apply plugin: 'maven-publish'
+version = "1.6.0"
+
+tasks.register("sourceJar", Jar) {
+    if (plugins.hasPlugin('com.android.library')) {
+        from android.sourceSets.main.java.srcDirs
+    } else {
+        println project
+        from sourceSets.main.allSource
+    }
+    classifier = 'sources'
+}
+
+apply from: '../publish-jitpack.gradle'

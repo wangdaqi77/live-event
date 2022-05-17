@@ -1,5 +1,5 @@
 rootProject.name = "live-event"
 include ':link_source'
 include ':demo'
-include ':core'
+include ':lifecycle-liveevent-core'
 include ':zzzzz-jitpack-multi-module'
