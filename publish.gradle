@@ -1,5 +1,5 @@
 apply plugin: 'maven-publish'
-version = "1.6.2"
+version = "1.6.3"
 
 tasks.register("sourceJar", Jar) {
     if (plugins.hasPlugin('com.android.library')) {

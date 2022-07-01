@@ -709,7 +709,7 @@ open class BackgroundLiveEvent<T> {
         return null
     }
 
-    fun asLiveData(): LiveData<T> {
+    open fun asLiveData(): LiveData<T> {
         return internalLiveData ?: kotlin.run { createInternalLiveData() }
     }
 

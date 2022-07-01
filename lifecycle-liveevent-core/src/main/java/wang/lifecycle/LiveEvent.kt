@@ -433,5 +433,5 @@ open class LiveEvent<T> : InternalSupportedLiveData<T> {
         return super.getValue()
     }
 
-    fun asLiveData(): LiveData<T> = this
+    open fun asLiveData(): LiveData<T> = this
 }
