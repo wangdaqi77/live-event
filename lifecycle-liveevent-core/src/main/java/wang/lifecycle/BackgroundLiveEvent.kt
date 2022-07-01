@@ -63,7 +63,7 @@ open class BackgroundLiveEvent<T> {
     private var mVersion: Int
     private var mDispatchingValue = false
     private var mDispatchInvalidated = false
-    private var internalLiveData: LiveData<T>? = null
+    private var internalLiveData: LiveData<out T>? = null
     @Volatile
     private var mLostPendingValueHead : LostValue.Head<T>? = null
     private val mThreadValueMap by lazy { ThreadValueMap() }
@@ -709,11 +709,11 @@ open class BackgroundLiveEvent<T> {
         return null
     }
 
-    open fun asLiveData(): LiveData<T> {
+    open fun asLiveData(): LiveData<out T> {
         return internalLiveData ?: kotlin.run { createInternalLiveData() }
     }
 
-    private fun createInternalLiveData(): LiveData<T> {
+    private fun createInternalLiveData(): LiveData<out T> {
         val liveData = MutableLiveData<T>()
         internalLiveData = liveData
         observeForever(BackgroundObserver(EventDispatcher.MAIN) { value ->
