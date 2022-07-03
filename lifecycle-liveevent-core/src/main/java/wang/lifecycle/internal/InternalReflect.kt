@@ -11,6 +11,7 @@ internal object InternalReflect {
 
     private var mObserversFieldAccessible = false
     private var mDispatchingValueFieldAccessible = false
+    private var mVersionFieldAccessible = false
     private var considerNotifyMethodAccessible = false
     private var mEnforceMainThreadAccessible = false
 
@@ -42,6 +43,13 @@ internal object InternalReflect {
         // private boolean mDispatchingValue;
         LiveData_class.getDeclaredField("mDispatchingValue").also {
             mDispatchingValueFieldAccessible = it.isAccessible
+        }
+    }
+
+    private val mVersion_field : Field by lazy(LazyThreadSafetyMode.NONE) {
+        // private int mVersion;
+        LiveData_class.getDeclaredField("mVersion").also {
+            mVersionFieldAccessible = it.isAccessible
         }
     }
 
@@ -83,4 +91,10 @@ internal object InternalReflect {
         }
     }
 
+    fun getVersion(liveData: LiveData<*>): Int {
+        mVersion_field.isAccessible = true
+        val mVersion = mVersion_field.get(liveData) as Int
+        mVersion_field.isAccessible = mVersionFieldAccessible
+        return mVersion
+    }
 }

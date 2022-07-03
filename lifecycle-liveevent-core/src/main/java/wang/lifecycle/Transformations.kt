@@ -3,12 +3,13 @@ package wang.lifecycle
 
 import androidx.annotation.MainThread
 import androidx.arch.core.util.Function
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import wang.lifecycle.*
 
 /**
  * Transformation methods for [LiveEvent].
- * 
+ *
  * Returns a [LiveEvent] mapped from the input `source` [LiveEvent] by applying
  * [mapFunction] to each value set on `source`.
  *
@@ -45,22 +46,22 @@ fun <X, Y> LiveEvent<X>.map(mapFunction: (X) -> Y): LiveEvent<Y> {
 
 /**
  * Transformation methods for [LiveEvent].
- * 
+ *
  * Returns a [LiveEvent] mapped from the input `source` [LiveEvent] by applying
  * [switchMapFunction] to each value set on `source`.
- * 
+ *
  * The returned [LiveEvent] delegates to the most recent [LiveEvent] created by
  * calling [switchMapFunction] with the most recent value set to `source`, without
  * changing the reference. In this way, [switchMapFunction] can change the 'backing'
  * [LiveEvent] transparently to any observer registered to the [LiveEvent] returned
  * by `switchMap()`.
- * 
+ *
  * Note that when the backing [LiveEvent] is switched, no further values from the older
  * [LiveEvent] will be set to the output [LiveEvent]. In this way, the method is
  * analogous to [io.reactivex.Observable.switchMap].
- * 
+ *
  * [switchMapFunction] will be executed on the main thread.
- * 
+ *
  * Here is an example class that holds a typed-in name of a user
  * [String] (such as from an `EditText`) in a [MutableLiveEvent] and
  * returns a [LiveEvent] containing a List of `User` objects for users that have
@@ -121,10 +122,10 @@ fun <X, Y> LiveEvent<X>.switchMap(switchMapFunction: (X) -> LiveEvent<Y>): LiveE
  * Transformation methods for [BackgroundLiveEvent].
  * @see [map]
  */
-fun <X, Y> BackgroundLiveEvent<X>.map(mapFunction: Function<X, Y>): BackgroundLiveEvent<Y> {
+fun <X, Y> BackgroundLiveEvent<X>.map(mapFunction: (X) -> Y): BackgroundLiveEvent<Y> {
     val result = MediatorBackgroundLiveEvent<Y>()
     result.addSource(this, BackgroundObserver { x ->
-        result.setValue(mapFunction.apply(x))
+        result.setValue(mapFunction(x))
     })
     return result
 }
@@ -133,12 +134,12 @@ fun <X, Y> BackgroundLiveEvent<X>.map(mapFunction: Function<X, Y>): BackgroundLi
  * Transformation methods for [BackgroundLiveEvent].
  * @see [switchMap]
  */
-fun <X, Y> BackgroundLiveEvent<X>.switchMap(switchMapFunction: Function<X, BackgroundLiveEvent<Y>>): BackgroundLiveEvent<Y> {
+fun <X, Y> BackgroundLiveEvent<X>.switchMap(switchMapFunction: (X) -> BackgroundLiveEvent<Y>): BackgroundLiveEvent<Y> {
     val result = MediatorBackgroundLiveEvent<Y>()
     result.addSource(this, BackgroundObserver(EventDispatcher.DEFAULT, object: Observer<X> {
         var mSource: BackgroundLiveEvent<Y>? = null
         override fun onChanged(x: X) {
-            val newLiveEvent = switchMapFunction.apply(x)
+            val newLiveEvent = switchMapFunction(x)
             if (mSource === newLiveEvent) {
                 return
             }

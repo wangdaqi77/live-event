@@ -2,7 +2,6 @@ package wang.lifecycle.test.base
 
 import android.app.Activity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.test.core.app.ActivityScenario
 import wang.lifecycle.BackgroundObserver
 import java.util.concurrent.SynchronousQueue
@@ -34,7 +33,11 @@ class ObserveTestRunner<A : Activity, T>(
 
     private lateinit var _onLaunchActivity: (activity: A, BackgroundObserver<T>) -> Unit
     private lateinit var onActivityStopped: (activity: A) -> Unit
+    private lateinit var onActivityStopped2: (activity: A) -> Unit
+    private lateinit var onActivityStopped3: (activity: A) -> Unit
     private lateinit var onActivityResumed: (activity: A) -> Unit
+    private lateinit var onActivityResumed2: (activity: A) -> Unit
+    private lateinit var onActivityResumed3: (activity: A) -> Unit
     private lateinit var onActivityDestroy: (activity: A) -> Unit
     private var _onBefore: (activity: A) -> Unit = {}
 
@@ -53,8 +56,25 @@ class ObserveTestRunner<A : Activity, T>(
         return this
     }
 
-    fun destroyActivityThen(block: (activity: A) -> Unit): ObserveTestRunner<A, T> {
-        this.onActivityDestroy = block
+
+    fun stopActivityThen2(block: (activity: A) -> Unit): ObserveTestRunner<A, T> {
+        this.onActivityStopped2 = block
+        return this
+    }
+
+    fun resumeActivityThen2(block: (activity: A) -> Unit): ObserveTestRunner<A, T> {
+        this.onActivityResumed2 = block
+        return this
+    }
+
+
+    fun stopActivityThen3(block: (activity: A) -> Unit): ObserveTestRunner<A, T> {
+        this.onActivityStopped3 = block
+        return this
+    }
+
+    fun resumeActivityThen3(block: (activity: A) -> Unit): ObserveTestRunner<A, T> {
+        this.onActivityResumed3 = block
         return this
     }
 
@@ -111,7 +131,34 @@ $desc
                 onActivityResumed.invoke(it)
             }
         }
-    }
 
+        if (::onActivityStopped2.isInitialized) {
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.onActivity {
+                onActivityStopped2.invoke(it)
+            }
+        }
+
+        if (::onActivityResumed2.isInitialized) {
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            scenario.onActivity {
+                onActivityResumed2.invoke(it)
+            }
+        }
+
+        if (::onActivityStopped3.isInitialized) {
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.onActivity {
+                onActivityStopped.invoke(it)
+            }
+        }
+
+        if (::onActivityResumed3.isInitialized) {
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            scenario.onActivity {
+                onActivityResumed.invoke(it)
+            }
+        }
+    }
 }
 

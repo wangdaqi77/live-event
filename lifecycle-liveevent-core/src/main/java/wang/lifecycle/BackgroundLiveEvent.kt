@@ -82,6 +82,8 @@ open class BackgroundLiveEvent<T> {
             setValue(newValue as T)
         }
     }
+    val version: Int
+        get() = mVersion
 
     /**
      * Creates a BackgroundLiveEvent initialized with the given [value].
@@ -686,8 +688,6 @@ open class BackgroundLiveEvent<T> {
             dispatchingValue(null)
         }
     }
-
-    open fun getVersion() = mVersion
 
     /**
      * Returns the current value.
