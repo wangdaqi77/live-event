@@ -49,7 +49,7 @@ import wang.lifecycle.internal.LiveDataSource
  *
  * @param T The type of data hold by this instance
  */
-class MediatorLiveEvent<T> : MutableLiveEvent<T>() {
+open class MediatorLiveEvent<T> : MutableLiveEvent<T>() {
     private val mLiveEventSources by lazy(LazyThreadSafetyMode.NONE) {
         SafeIterableMap<LiveData<*>, Source<*>>()
     }
